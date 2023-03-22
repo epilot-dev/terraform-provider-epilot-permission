@@ -47,7 +47,7 @@ internal/sdk/pkg/models/shared/partnerrole.go
 internal/sdk/pkg/models/shared/rolesearchinput.go
 internal/sdk/pkg/models/shared/security.go
 internal/provider/provider.go
-internal/provider/role_resource.go
-internal/provider/role_resource_sdk.go
 internal/provider/assignment_resource.go
 internal/provider/assignment_resource_sdk.go
+internal/provider/role_resource.go
+internal/provider/role_resource_sdk.go
