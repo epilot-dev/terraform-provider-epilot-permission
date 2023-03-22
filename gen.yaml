@@ -1,0 +1,9 @@
+configVersion: 1.0.0
+generation:
+  telemetryEnabled: false
+  sdkClassName: SDK
+  sdkFlattening: false
+terraform:
+  version: ""
+  author: epilot
+  packageName: epilotpermissions
