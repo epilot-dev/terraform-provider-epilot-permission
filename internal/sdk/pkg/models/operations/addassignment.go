@@ -4,7 +4,6 @@ package operations
 
 import (
 	"epilotpermissions/internal/sdk/pkg/models/shared"
-	"fmt"
 	"net/http"
 )
 
@@ -13,57 +12,8 @@ type AddAssignmentPathParams struct {
 	UserID string `pathParam:"style=simple,explode=false,name=userId"`
 }
 
-func NewAddAssignmentPathParams(input interface{}) (*AddAssignmentPathParams, error) {
-	mapInput, ok := input.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("addAssignmentPathParams: Expected input to be a map[string]interface{}")
-	}
-	if _, ok = mapInput["roleId"]; !ok {
-		return nil, fmt.Errorf("addAssignmentPathParams: RoleID is required, but was not found")
-	}
-	var roleID string
-	roleID, ok = mapInput["roleId"].(string)
-	if !ok {
-		return nil, fmt.Errorf("addAssignmentPathParams: unexpected type for RoleID. Expected string but was %T", mapInput["roleId"])
-	}
-	if _, ok = mapInput["userId"]; !ok {
-		return nil, fmt.Errorf("addAssignmentPathParams: UserID is required, but was not found")
-	}
-	var userID string
-	userID, ok = mapInput["userId"].(string)
-	if !ok {
-		return nil, fmt.Errorf("addAssignmentPathParams: unexpected type for UserID. Expected string but was %T", mapInput["userId"])
-	}
-	out := &AddAssignmentPathParams{
-		RoleID: roleID,
-		UserID: userID,
-	}
-
-	return out, nil
-}
-
 type AddAssignmentRequest struct {
 	PathParams AddAssignmentPathParams
-}
-
-func NewAddAssignmentRequest(input interface{}) (*AddAssignmentRequest, error) {
-	mapInput, ok := input.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("addAssignmentRequest: Expected input to be a map[string]interface{}")
-	}
-	if _, ok = mapInput["PathParams"]; !ok {
-		return nil, fmt.Errorf("addAssignmentRequest: PathParams is required, but was not found")
-	}
-	pathParamsPtr, err := NewAddAssignmentPathParams(mapInput["PathParams"])
-	if err != nil {
-		return nil, err
-	}
-	pathParams := *pathParamsPtr
-	out := &AddAssignmentRequest{
-		PathParams: pathParams,
-	}
-
-	return out, nil
 }
 
 type AddAssignmentResponse struct {
@@ -72,61 +22,4 @@ type AddAssignmentResponse struct {
 	ContentType string
 	StatusCode  int
 	RawResponse *http.Response
-}
-
-func NewAddAssignmentResponse(input interface{}) (*AddAssignmentResponse, error) {
-	mapInput, ok := input.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("addAssignmentResponse: Expected input to be a map[string]interface{}")
-	}
-	var assignment *shared.Assignment
-	if mapInput["Assignment"] != nil {
-		assignmentTmp, err := shared.NewAssignment(mapInput["Assignment"])
-		if err != nil {
-			return nil, err
-		}
-		assignment = assignmentTmp
-	}
-	if _, ok = mapInput["ContentType"]; !ok {
-		return nil, fmt.Errorf("addAssignmentResponse: ContentType is required, but was not found")
-	}
-	var contentType string
-	contentType, ok = mapInput["ContentType"].(string)
-	if !ok {
-		return nil, fmt.Errorf("addAssignmentResponse: unexpected type for ContentType. Expected string but was %T", mapInput["ContentType"])
-	}
-	if _, ok = mapInput["StatusCode"]; !ok {
-		return nil, fmt.Errorf("addAssignmentResponse: StatusCode is required, but was not found")
-	}
-	if _, ok = mapInput["StatusCode"]; !ok {
-		return nil, fmt.Errorf("addAssignmentResponse: StatusCode is required, but was not found")
-	}
-	var statusCodeFloat64 float64
-	statusCodeFloat64, ok = mapInput["StatusCode"].(float64)
-	if !ok {
-		return nil, fmt.Errorf("addAssignmentResponse: unexpected type for StatusCode. Expected float64 but was %T", mapInput["StatusCode"])
-	}
-	var statusCode int
-	if statusCodeFloat64 != float64(int(statusCodeFloat64)) {
-		return nil, fmt.Errorf("addAssignmentResponse: unexpected value for integer StatusCode. Got %#v", mapInput["StatusCode"])
-	} else {
-		statusCode = int(statusCodeFloat64)
-	}
-	rawResponse := new(http.Response)
-	if _, ok = mapInput["RawResponse"]; !ok {
-		rawResponse = nil
-	} else {
-		*rawResponse, ok = mapInput["RawResponse"].(http.Response)
-		if !ok {
-			return nil, fmt.Errorf("addAssignmentResponse: unexpected type for RawResponse. Expected http.Response but was %T", mapInput["RawResponse"])
-		}
-	}
-	out := &AddAssignmentResponse{
-		Assignment:  assignment,
-		ContentType: contentType,
-		StatusCode:  statusCode,
-		RawResponse: rawResponse,
-	}
-
-	return out, nil
 }

@@ -3,6 +3,7 @@
 package shared
 
 import (
+	"encoding/json"
 	"fmt"
 	"time"
 )
@@ -12,6 +13,20 @@ type ShareRoleTypeEnum string
 const (
 	ShareRoleTypeEnumShareRole ShareRoleTypeEnum = "share_role"
 )
+
+func (e *ShareRoleTypeEnum) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+	switch s {
+	case "share_role":
+		*e = ShareRoleTypeEnum(s)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for ShareRoleTypeEnum: %s", s)
+	}
+}
 
 // ShareRole - A role that can be assigned to users in other organizations for sharing purposes.
 type ShareRole struct {
@@ -28,91 +43,4 @@ type ShareRole struct {
 	// URL-friendly name for the role
 	Slug string            `json:"slug"`
 	Type ShareRoleTypeEnum `json:"type"`
-}
-
-func NewShareRole(input interface{}) (*ShareRole, error) {
-	mapInput, ok := input.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("ShareRole: Expected input to be a map[string]interface{}")
-	}
-	expiresAt := new(time.Time)
-	if _, ok = mapInput["expires_at"]; !ok {
-		expiresAt = nil
-	} else {
-		*expiresAt, ok = mapInput["expires_at"].(time.Time)
-		if !ok {
-			return nil, fmt.Errorf("ShareRole: unexpected type for ExpiresAt. Expected time.Time but was %T", mapInput["expires_at"])
-		}
-	}
-	if _, ok = mapInput["grants"]; !ok {
-		return nil, fmt.Errorf("ShareRole: Grants is required, but was not found")
-	}
-	var grants []Grant
-	grantsTmp, ok := mapInput["grants"].([]interface{})
-	if !ok {
-		return nil, fmt.Errorf("ShareRole: unexpected type for Grants. Expected []Grant but was %T", mapInput["grants"])
-	}
-	for _, grantsItemRaw := range grantsTmp {
-		grantsItemPtr, err := NewGrant(grantsItemRaw)
-		if err != nil {
-			return nil, err
-		}
-		grantsItem := *grantsItemPtr
-		grants = append(grants, grantsItem)
-	}
-	if _, ok = mapInput["id"]; !ok {
-		return nil, fmt.Errorf("ShareRole: ID is required, but was not found")
-	}
-	var id string
-	id, ok = mapInput["id"].(string)
-	if !ok {
-		return nil, fmt.Errorf("ShareRole: unexpected type for ID. Expected string but was %T", mapInput["id"])
-	}
-	if _, ok = mapInput["name"]; !ok {
-		return nil, fmt.Errorf("ShareRole: Name is required, but was not found")
-	}
-	var name string
-	name, ok = mapInput["name"].(string)
-	if !ok {
-		return nil, fmt.Errorf("ShareRole: unexpected type for Name. Expected string but was %T", mapInput["name"])
-	}
-	if _, ok = mapInput["organization_id"]; !ok {
-		return nil, fmt.Errorf("ShareRole: OrganizationID is required, but was not found")
-	}
-	var organizationID string
-	organizationID, ok = mapInput["organization_id"].(string)
-	if !ok {
-		return nil, fmt.Errorf("ShareRole: unexpected type for OrganizationID. Expected string but was %T", mapInput["organization_id"])
-	}
-	if _, ok = mapInput["slug"]; !ok {
-		return nil, fmt.Errorf("ShareRole: Slug is required, but was not found")
-	}
-	var slug string
-	slug, ok = mapInput["slug"].(string)
-	if !ok {
-		return nil, fmt.Errorf("ShareRole: unexpected type for Slug. Expected string but was %T", mapInput["slug"])
-	}
-	if _, ok = mapInput["type"]; !ok {
-		return nil, fmt.Errorf("ShareRole: Type is required, but was not found")
-	}
-	var typeString string
-	typeString, ok = mapInput["type"].(string)
-	if !ok {
-		return nil, fmt.Errorf("ShareRole: unexpected type for Type. Expected string but was %T", mapInput["type"])
-	}
-	type1 := ShareRoleTypeEnum(typeString)
-	if type1 != ShareRoleTypeEnumShareRole {
-		return nil, fmt.Errorf("ShareRole: unexpected value for Type. Expected one of TypeShareRole but was %s", mapInput["type"])
-	}
-	out := &ShareRole{
-		ExpiresAt:      expiresAt,
-		Grants:         grants,
-		ID:             id,
-		Name:           name,
-		OrganizationID: organizationID,
-		Slug:           slug,
-		Type:           type1,
-	}
-
-	return out, nil
 }

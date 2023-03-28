@@ -9,8 +9,8 @@ import (
 	"time"
 )
 
-func (r *RoleResourceModel) ToSDKType() interface{} {
-	var out interface{}
+func (r *RoleResourceModel) ToSDKType() *shared.Role {
+	var out shared.Role
 	var userRole *shared.UserRole
 	if r.Role.UserRole != nil {
 		expiresAt := new(time.Time)
@@ -56,7 +56,9 @@ func (r *RoleResourceModel) ToSDKType() interface{} {
 		}
 	}
 	if userRole != nil {
-		out = userRole
+		out = shared.Role{
+			UserRole: userRole,
+		}
 	}
 	var orgRole *shared.OrgRole
 	if r.Role.OrgRole != nil {
@@ -103,7 +105,9 @@ func (r *RoleResourceModel) ToSDKType() interface{} {
 		}
 	}
 	if orgRole != nil {
-		out = orgRole
+		out = shared.Role{
+			OrgRole: orgRole,
+		}
 	}
 	var shareRole *shared.ShareRole
 	if r.Role.ShareRole != nil {
@@ -150,7 +154,9 @@ func (r *RoleResourceModel) ToSDKType() interface{} {
 		}
 	}
 	if shareRole != nil {
-		out = shareRole
+		out = shared.Role{
+			ShareRole: shareRole,
+		}
 	}
 	var partnerRole *shared.PartnerRole
 	if r.Role.PartnerRole != nil {
@@ -204,24 +210,25 @@ func (r *RoleResourceModel) ToSDKType() interface{} {
 		}
 	}
 	if partnerRole != nil {
-		out = partnerRole
+		out = shared.Role{
+			PartnerRole: partnerRole,
+		}
 	}
 	return &out
 
 }
 
-func (r *RoleResourceModel) RefreshFromSDKType(resp interface{}) {
+func (r *RoleResourceModel) RefreshFromSDKType(resp *shared.Role) {
 	// Unwrap
-	userRoleMaybe, userRoleOK := resp.(*shared.UserRole)
-	if userRoleOK {
+	if resp.UserRole != nil {
 		r.Role.UserRole = &UserRole{}
-		if userRoleMaybe.ExpiresAt != nil {
-			r.Role.UserRole.ExpiresAt = types.StringValue(userRoleMaybe.ExpiresAt.Format(time.RFC3339))
+		if resp.UserRole.ExpiresAt != nil {
+			r.Role.UserRole.ExpiresAt = types.StringValue(resp.UserRole.ExpiresAt.Format(time.RFC3339))
 		} else {
 			r.Role.UserRole.ExpiresAt = types.StringNull()
 		}
 		r.Role.UserRole.Grants = nil
-		for _, grantsItem := range userRoleMaybe.Grants {
+		for _, grantsItem := range resp.UserRole.Grants {
 			var grants1 Grant
 			grants1.Action = types.StringValue(grantsItem.Action)
 			if grantsItem.Effect != nil {
@@ -236,22 +243,21 @@ func (r *RoleResourceModel) RefreshFromSDKType(resp interface{}) {
 			}
 			r.Role.UserRole.Grants = append(r.Role.UserRole.Grants, grants1)
 		}
-		r.Role.UserRole.ID = types.StringValue(userRoleMaybe.ID)
-		r.Role.UserRole.Name = types.StringValue(userRoleMaybe.Name)
-		r.Role.UserRole.OrganizationID = types.StringValue(userRoleMaybe.OrganizationID)
-		r.Role.UserRole.Slug = types.StringValue(userRoleMaybe.Slug)
-		r.Role.UserRole.Type = types.StringValue(string(userRoleMaybe.Type))
+		r.Role.UserRole.ID = types.StringValue(resp.UserRole.ID)
+		r.Role.UserRole.Name = types.StringValue(resp.UserRole.Name)
+		r.Role.UserRole.OrganizationID = types.StringValue(resp.UserRole.OrganizationID)
+		r.Role.UserRole.Slug = types.StringValue(resp.UserRole.Slug)
+		r.Role.UserRole.Type = types.StringValue(string(resp.UserRole.Type))
 	}
-	orgRoleMaybe, orgRoleOK := resp.(*shared.OrgRole)
-	if orgRoleOK {
+	if resp.OrgRole != nil {
 		r.Role.OrgRole = &OrgRole{}
-		if orgRoleMaybe.ExpiresAt != nil {
-			r.Role.OrgRole.ExpiresAt = types.StringValue(orgRoleMaybe.ExpiresAt.Format(time.RFC3339))
+		if resp.OrgRole.ExpiresAt != nil {
+			r.Role.OrgRole.ExpiresAt = types.StringValue(resp.OrgRole.ExpiresAt.Format(time.RFC3339))
 		} else {
 			r.Role.OrgRole.ExpiresAt = types.StringNull()
 		}
 		r.Role.OrgRole.Grants = nil
-		for _, grantsItem1 := range orgRoleMaybe.Grants {
+		for _, grantsItem1 := range resp.OrgRole.Grants {
 			var grants3 Grant
 			grants3.Action = types.StringValue(grantsItem1.Action)
 			if grantsItem1.Effect != nil {
@@ -266,22 +272,21 @@ func (r *RoleResourceModel) RefreshFromSDKType(resp interface{}) {
 			}
 			r.Role.OrgRole.Grants = append(r.Role.OrgRole.Grants, grants3)
 		}
-		r.Role.OrgRole.ID = types.StringValue(orgRoleMaybe.ID)
-		r.Role.OrgRole.Name = types.StringValue(orgRoleMaybe.Name)
-		r.Role.OrgRole.OrganizationID = types.StringValue(orgRoleMaybe.OrganizationID)
-		r.Role.OrgRole.Slug = types.StringValue(orgRoleMaybe.Slug)
-		r.Role.OrgRole.Type = types.StringValue(string(orgRoleMaybe.Type))
+		r.Role.OrgRole.ID = types.StringValue(resp.OrgRole.ID)
+		r.Role.OrgRole.Name = types.StringValue(resp.OrgRole.Name)
+		r.Role.OrgRole.OrganizationID = types.StringValue(resp.OrgRole.OrganizationID)
+		r.Role.OrgRole.Slug = types.StringValue(resp.OrgRole.Slug)
+		r.Role.OrgRole.Type = types.StringValue(string(resp.OrgRole.Type))
 	}
-	shareRoleMaybe, shareRoleOK := resp.(*shared.ShareRole)
-	if shareRoleOK {
+	if resp.ShareRole != nil {
 		r.Role.ShareRole = &ShareRole{}
-		if shareRoleMaybe.ExpiresAt != nil {
-			r.Role.ShareRole.ExpiresAt = types.StringValue(shareRoleMaybe.ExpiresAt.Format(time.RFC3339))
+		if resp.ShareRole.ExpiresAt != nil {
+			r.Role.ShareRole.ExpiresAt = types.StringValue(resp.ShareRole.ExpiresAt.Format(time.RFC3339))
 		} else {
 			r.Role.ShareRole.ExpiresAt = types.StringNull()
 		}
 		r.Role.ShareRole.Grants = nil
-		for _, grantsItem2 := range shareRoleMaybe.Grants {
+		for _, grantsItem2 := range resp.ShareRole.Grants {
 			var grants5 Grant
 			grants5.Action = types.StringValue(grantsItem2.Action)
 			if grantsItem2.Effect != nil {
@@ -296,22 +301,21 @@ func (r *RoleResourceModel) RefreshFromSDKType(resp interface{}) {
 			}
 			r.Role.ShareRole.Grants = append(r.Role.ShareRole.Grants, grants5)
 		}
-		r.Role.ShareRole.ID = types.StringValue(shareRoleMaybe.ID)
-		r.Role.ShareRole.Name = types.StringValue(shareRoleMaybe.Name)
-		r.Role.ShareRole.OrganizationID = types.StringValue(shareRoleMaybe.OrganizationID)
-		r.Role.ShareRole.Slug = types.StringValue(shareRoleMaybe.Slug)
-		r.Role.ShareRole.Type = types.StringValue(string(shareRoleMaybe.Type))
+		r.Role.ShareRole.ID = types.StringValue(resp.ShareRole.ID)
+		r.Role.ShareRole.Name = types.StringValue(resp.ShareRole.Name)
+		r.Role.ShareRole.OrganizationID = types.StringValue(resp.ShareRole.OrganizationID)
+		r.Role.ShareRole.Slug = types.StringValue(resp.ShareRole.Slug)
+		r.Role.ShareRole.Type = types.StringValue(string(resp.ShareRole.Type))
 	}
-	partnerRoleMaybe, partnerRoleOK := resp.(*shared.PartnerRole)
-	if partnerRoleOK {
+	if resp.PartnerRole != nil {
 		r.Role.PartnerRole = &PartnerRole{}
-		if partnerRoleMaybe.ExpiresAt != nil {
-			r.Role.PartnerRole.ExpiresAt = types.StringValue(partnerRoleMaybe.ExpiresAt.Format(time.RFC3339))
+		if resp.PartnerRole.ExpiresAt != nil {
+			r.Role.PartnerRole.ExpiresAt = types.StringValue(resp.PartnerRole.ExpiresAt.Format(time.RFC3339))
 		} else {
 			r.Role.PartnerRole.ExpiresAt = types.StringNull()
 		}
 		r.Role.PartnerRole.Grants = nil
-		for _, grantsItem3 := range partnerRoleMaybe.Grants {
+		for _, grantsItem3 := range resp.PartnerRole.Grants {
 			var grants7 Grant
 			grants7.Action = types.StringValue(grantsItem3.Action)
 			if grantsItem3.Effect != nil {
@@ -326,16 +330,16 @@ func (r *RoleResourceModel) RefreshFromSDKType(resp interface{}) {
 			}
 			r.Role.PartnerRole.Grants = append(r.Role.PartnerRole.Grants, grants7)
 		}
-		r.Role.PartnerRole.ID = types.StringValue(partnerRoleMaybe.ID)
-		r.Role.PartnerRole.Name = types.StringValue(partnerRoleMaybe.Name)
-		r.Role.PartnerRole.OrganizationID = types.StringValue(partnerRoleMaybe.OrganizationID)
-		if partnerRoleMaybe.PartnerOrgID != nil {
-			r.Role.PartnerRole.PartnerOrgID = types.StringValue(*partnerRoleMaybe.PartnerOrgID)
+		r.Role.PartnerRole.ID = types.StringValue(resp.PartnerRole.ID)
+		r.Role.PartnerRole.Name = types.StringValue(resp.PartnerRole.Name)
+		r.Role.PartnerRole.OrganizationID = types.StringValue(resp.PartnerRole.OrganizationID)
+		if resp.PartnerRole.PartnerOrgID != nil {
+			r.Role.PartnerRole.PartnerOrgID = types.StringValue(*resp.PartnerRole.PartnerOrgID)
 		} else {
 			r.Role.PartnerRole.PartnerOrgID = types.StringNull()
 		}
-		r.Role.PartnerRole.Slug = types.StringValue(partnerRoleMaybe.Slug)
-		r.Role.PartnerRole.Type = types.StringValue(string(partnerRoleMaybe.Type))
+		r.Role.PartnerRole.Slug = types.StringValue(resp.PartnerRole.Slug)
+		r.Role.PartnerRole.Type = types.StringValue(string(resp.PartnerRole.Type))
 	}
 	// Unwrap done. Flattening in
 	r.ID = types.StringValue(reflect.Indirect(reflect.ValueOf(resp)).FieldByName("ID").String())

@@ -68,14 +68,12 @@ func (s *assignments) AddAssignment(ctx context.Context, request operations.AddA
 	case httpRes.StatusCode == 201:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out interface{}
+			var out *shared.Assignment
 			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
 				return nil, err
 			}
-			res.Assignment, err = shared.NewAssignment(out)
-			if err != nil {
-				return nil, fmt.Errorf("error validating response body: %w", err)
-			}
+
+			res.Assignment = out
 		}
 	}
 
@@ -212,14 +210,12 @@ func (s *assignments) ListAllAssignments(ctx context.Context) (*operations.ListA
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out interface{}
+			var out *operations.ListAllAssignments200ApplicationJSON
 			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
 				return nil, err
 			}
-			res.ListAllAssignments200ApplicationJSONObject, err = operations.NewListAllAssignments200ApplicationJSON(out)
-			if err != nil {
-				return nil, fmt.Errorf("error validating response body: %w", err)
-			}
+
+			res.ListAllAssignments200ApplicationJSONObject = out
 		}
 	}
 
@@ -259,14 +255,12 @@ func (s *assignments) RemoveAssignment(ctx context.Context, request operations.R
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out interface{}
+			var out *shared.Assignment
 			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
 				return nil, err
 			}
-			res.Assignment, err = shared.NewAssignment(out)
-			if err != nil {
-				return nil, fmt.Errorf("error validating response body: %w", err)
-			}
+
+			res.Assignment = out
 		}
 	}
 

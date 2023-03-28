@@ -2,10 +2,6 @@
 
 package shared
 
-import (
-	"fmt"
-)
-
 type RoleSearchInput struct {
 	// The Number of roles to return
 	Limit *float64 `json:"limit,omitempty"`
@@ -19,93 +15,4 @@ type RoleSearchInput struct {
 	RoleIds []string `json:"role_ids,omitempty"`
 	// List of role slugs to filter by
 	Slugs []string `json:"slugs,omitempty"`
-}
-
-func NewRoleSearchInput(input interface{}) (*RoleSearchInput, error) {
-	mapInput, ok := input.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("RoleSearchInput: Expected input to be a map[string]interface{}")
-	}
-	limit := new(float64)
-	if _, ok = mapInput["limit"]; !ok {
-		limit = nil
-	} else {
-		*limit, ok = mapInput["limit"].(float64)
-		if !ok {
-			return nil, fmt.Errorf("RoleSearchInput: unexpected type for Limit. Expected float64 but was %T", mapInput["limit"])
-		}
-	}
-	offset := new(float64)
-	if _, ok = mapInput["offset"]; !ok {
-		offset = nil
-	} else {
-		*offset, ok = mapInput["offset"].(float64)
-		if !ok {
-			return nil, fmt.Errorf("RoleSearchInput: unexpected type for Offset. Expected float64 but was %T", mapInput["offset"])
-		}
-	}
-	var orgIds []string
-	if _, ok = mapInput["org_ids"]; ok {
-		orgIdsTmp, ok := mapInput["org_ids"].([]interface{})
-		if !ok {
-			return nil, fmt.Errorf("RoleSearchInput: unexpected type for OrgIds. Expected []string but was %T", mapInput["org_ids"])
-		}
-		for _, orgIdsItemRaw := range orgIdsTmp {
-			var orgIdsItem string
-			orgIdsItem, ok = orgIdsItemRaw.(string)
-			if !ok {
-				return nil, fmt.Errorf("RoleSearchInput: unexpected type for OrgIdsItem. Expected string but was %T", orgIdsItemRaw)
-			}
-			orgIds = append(orgIds, orgIdsItem)
-		}
-	}
-	query := new(string)
-	if _, ok = mapInput["query"]; !ok {
-		query = nil
-	} else {
-		*query, ok = mapInput["query"].(string)
-		if !ok {
-			return nil, fmt.Errorf("RoleSearchInput: unexpected type for Query. Expected string but was %T", mapInput["query"])
-		}
-	}
-	var roleIds []string
-	if _, ok = mapInput["role_ids"]; ok {
-		roleIdsTmp, ok := mapInput["role_ids"].([]interface{})
-		if !ok {
-			return nil, fmt.Errorf("RoleSearchInput: unexpected type for RoleIds. Expected []string but was %T", mapInput["role_ids"])
-		}
-		for _, roleIdsItemRaw := range roleIdsTmp {
-			var roleIdsItem string
-			roleIdsItem, ok = roleIdsItemRaw.(string)
-			if !ok {
-				return nil, fmt.Errorf("RoleSearchInput: unexpected type for RoleIdsItem. Expected string but was %T", roleIdsItemRaw)
-			}
-			roleIds = append(roleIds, roleIdsItem)
-		}
-	}
-	var slugs []string
-	if _, ok = mapInput["slugs"]; ok {
-		slugsTmp, ok := mapInput["slugs"].([]interface{})
-		if !ok {
-			return nil, fmt.Errorf("RoleSearchInput: unexpected type for Slugs. Expected []string but was %T", mapInput["slugs"])
-		}
-		for _, slugsItemRaw := range slugsTmp {
-			var slugsItem string
-			slugsItem, ok = slugsItemRaw.(string)
-			if !ok {
-				return nil, fmt.Errorf("RoleSearchInput: unexpected type for SlugsItem. Expected string but was %T", slugsItemRaw)
-			}
-			slugs = append(slugs, slugsItem)
-		}
-	}
-	out := &RoleSearchInput{
-		Limit:   limit,
-		Offset:  offset,
-		OrgIds:  orgIds,
-		Query:   query,
-		RoleIds: roleIds,
-		Slugs:   slugs,
-	}
-
-	return out, nil
 }

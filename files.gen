@@ -25,6 +25,7 @@ internal/validators/ExactlyOneChild.go
 internal/validators/JSONParseValidator.go
 internal/validators/RFC3339Validator.go
 main.go
+terraform-registry-manifest.json
 tools/tools.go
 internal/sdk/pkg/models/operations/addassignment.go
 internal/sdk/pkg/models/operations/assignroles.go
@@ -39,6 +40,7 @@ internal/sdk/pkg/models/operations/putrole.go
 internal/sdk/pkg/models/operations/refreshpermissions.go
 internal/sdk/pkg/models/operations/searchroles.go
 internal/sdk/pkg/models/shared/assignment.go
+internal/sdk/pkg/models/shared/role.go
 internal/sdk/pkg/models/shared/userrole.go
 internal/sdk/pkg/models/shared/grant.go
 internal/sdk/pkg/models/shared/orgrole.go
@@ -46,6 +48,7 @@ internal/sdk/pkg/models/shared/sharerole.go
 internal/sdk/pkg/models/shared/partnerrole.go
 internal/sdk/pkg/models/shared/rolesearchinput.go
 internal/sdk/pkg/models/shared/security.go
+USAGE.md
 internal/provider/provider.go
 internal/provider/assignment_resource.go
 internal/provider/assignment_resource_sdk.go

@@ -4,79 +4,12 @@ package operations
 
 import (
 	"epilotpermissions/internal/sdk/pkg/models/shared"
-	"fmt"
 	"net/http"
 )
 
 // ListAllRoles200ApplicationJSON - ok
 type ListAllRoles200ApplicationJSON struct {
-	Roles []interface{} `json:"roles,omitempty"`
-}
-
-func NewListAllRoles200ApplicationJSON(input interface{}) (*ListAllRoles200ApplicationJSON, error) {
-	mapInput, ok := input.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("listAllRoles_200ApplicationJSON: Expected input to be a map[string]interface{}")
-	}
-	var roles []interface{}
-	if _, ok = mapInput["roles"]; ok {
-		rolesTmp, ok := mapInput["roles"].([]interface{})
-		if !ok {
-			return nil, fmt.Errorf("listAllRoles_200ApplicationJSON: unexpected type for Roles. Expected []interface{} but was %T", mapInput["roles"])
-		}
-		for _, rolesItemRaw := range rolesTmp {
-			var rolesItem interface{}
-			pickFirstValidRolesItem := make([]func(interface{}) (interface{}, error), 0)
-			pickFirstValidRolesItem = append(pickFirstValidRolesItem, func(sharedUserRoleInput interface{}) (interface{}, error) {
-				rolesItemPtr, err := shared.NewUserRole(sharedUserRoleInput)
-				if err != nil {
-					return nil, err
-				}
-				sharedUserRoleOutput := *rolesItemPtr
-				return sharedUserRoleOutput, nil
-			})
-			pickFirstValidRolesItem = append(pickFirstValidRolesItem, func(sharedOrgRoleInput interface{}) (interface{}, error) {
-				rolesItemPtr1, err := shared.NewOrgRole(sharedOrgRoleInput)
-				if err != nil {
-					return nil, err
-				}
-				sharedOrgRoleOutput := *rolesItemPtr1
-				return sharedOrgRoleOutput, nil
-			})
-			pickFirstValidRolesItem = append(pickFirstValidRolesItem, func(sharedShareRoleInput interface{}) (interface{}, error) {
-				rolesItemPtr2, err := shared.NewShareRole(sharedShareRoleInput)
-				if err != nil {
-					return nil, err
-				}
-				sharedShareRoleOutput := *rolesItemPtr2
-				return sharedShareRoleOutput, nil
-			})
-			pickFirstValidRolesItem = append(pickFirstValidRolesItem, func(sharedPartnerRoleInput interface{}) (interface{}, error) {
-				rolesItemPtr3, err := shared.NewPartnerRole(sharedPartnerRoleInput)
-				if err != nil {
-					return nil, err
-				}
-				sharedPartnerRoleOutput := *rolesItemPtr3
-				return sharedPartnerRoleOutput, nil
-			})
-			for _, rolesItemChecker := range pickFirstValidRolesItem {
-				var rolesItemErr error
-				rolesItem, rolesItemErr = rolesItemChecker(rolesItemRaw)
-				if rolesItemErr == nil {
-					break
-				}
-			}
-			if rolesItem == nil {
-				return nil, fmt.Errorf("listAllRoles_200ApplicationJSON: unexpected type for RolesItem. Expected one of shared.UserRole, shared.OrgRole, shared.ShareRole, shared.PartnerRole to be valid. Got %#v", rolesItemRaw)
-			}
-			roles = append(roles, rolesItem)
-		}
-	}
-	out := &ListAllRoles200ApplicationJSON{
-		Roles: roles,
-	}
-
-	return out, nil
+	Roles []shared.Role `json:"roles,omitempty"`
 }
 
 type ListAllRolesResponse struct {
@@ -85,61 +18,4 @@ type ListAllRolesResponse struct {
 	RawResponse *http.Response
 	// ok
 	ListAllRoles200ApplicationJSONObject *ListAllRoles200ApplicationJSON
-}
-
-func NewListAllRolesResponse(input interface{}) (*ListAllRolesResponse, error) {
-	mapInput, ok := input.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("listAllRolesResponse: Expected input to be a map[string]interface{}")
-	}
-	if _, ok = mapInput["ContentType"]; !ok {
-		return nil, fmt.Errorf("listAllRolesResponse: ContentType is required, but was not found")
-	}
-	var contentType string
-	contentType, ok = mapInput["ContentType"].(string)
-	if !ok {
-		return nil, fmt.Errorf("listAllRolesResponse: unexpected type for ContentType. Expected string but was %T", mapInput["ContentType"])
-	}
-	if _, ok = mapInput["StatusCode"]; !ok {
-		return nil, fmt.Errorf("listAllRolesResponse: StatusCode is required, but was not found")
-	}
-	if _, ok = mapInput["StatusCode"]; !ok {
-		return nil, fmt.Errorf("listAllRolesResponse: StatusCode is required, but was not found")
-	}
-	var statusCodeFloat64 float64
-	statusCodeFloat64, ok = mapInput["StatusCode"].(float64)
-	if !ok {
-		return nil, fmt.Errorf("listAllRolesResponse: unexpected type for StatusCode. Expected float64 but was %T", mapInput["StatusCode"])
-	}
-	var statusCode int
-	if statusCodeFloat64 != float64(int(statusCodeFloat64)) {
-		return nil, fmt.Errorf("listAllRolesResponse: unexpected value for integer StatusCode. Got %#v", mapInput["StatusCode"])
-	} else {
-		statusCode = int(statusCodeFloat64)
-	}
-	rawResponse := new(http.Response)
-	if _, ok = mapInput["RawResponse"]; !ok {
-		rawResponse = nil
-	} else {
-		*rawResponse, ok = mapInput["RawResponse"].(http.Response)
-		if !ok {
-			return nil, fmt.Errorf("listAllRolesResponse: unexpected type for RawResponse. Expected http.Response but was %T", mapInput["RawResponse"])
-		}
-	}
-	var listAllRoles200ApplicationJSONObject *ListAllRoles200ApplicationJSON
-	if mapInput["listAllRoles_200ApplicationJSON_object"] != nil {
-		listAllRoles200ApplicationJSONObjectTmp, err := NewListAllRoles200ApplicationJSON(mapInput["listAllRoles_200ApplicationJSON_object"])
-		if err != nil {
-			return nil, err
-		}
-		listAllRoles200ApplicationJSONObject = listAllRoles200ApplicationJSONObjectTmp
-	}
-	out := &ListAllRolesResponse{
-		ContentType:                          contentType,
-		StatusCode:                           statusCode,
-		RawResponse:                          rawResponse,
-		ListAllRoles200ApplicationJSONObject: listAllRoles200ApplicationJSONObject,
-	}
-
-	return out, nil
 }

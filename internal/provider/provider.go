@@ -27,7 +27,7 @@ type EpilotpermissionsProvider struct {
 type EpilotpermissionsProviderModel struct {
 	ServerURL     types.String `tfsdk:"server_url"`
 	Authorization types.String `tfsdk:"authorization"`
-	APIKey        types.String `tfsdk:"apikey"`
+	APIKey        types.String `tfsdk:"api_key"`
 }
 
 func (p *EpilotpermissionsProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -46,7 +46,7 @@ func (p *EpilotpermissionsProvider) Schema(ctx context.Context, req provider.Sch
 				Optional:  true,
 				Sensitive: true,
 			},
-			"apikey": schema.StringAttribute{
+			"api_key": schema.StringAttribute{
 				Optional:  true,
 				Sensitive: true,
 			},
@@ -69,13 +69,24 @@ func (p *EpilotpermissionsProvider) Configure(ctx context.Context, req provider.
 		ServerURL = "https://permissions.sls.epilot.io"
 	}
 
+	var epilotAuth *shared.SchemeEpilotAuth
+	authorization := data.Authorization.ValueString()
+	epilotAuth = &shared.SchemeEpilotAuth{
+		Authorization: authorization,
+	}
+	var epilotOrg *shared.SchemeEpilotOrg
+	apiKey := data.APIKey.ValueString()
+	epilotOrg = &shared.SchemeEpilotOrg{
+		APIKey: apiKey,
+	}
+	security := shared.Security{
+		EpilotAuth: epilotAuth,
+		EpilotOrg:  epilotOrg,
+	}
+
 	opts := []sdk.SDKOption{
 		sdk.WithServerURL(ServerURL),
-		sdk.WithSecurity(shared.Security{
-			EpilotAuth: &shared.SchemeEpilotAuth{
-				Authorization: data.Authorization.ValueString(),
-			},
-		}),
+		sdk.WithSecurity(security),
 	}
 	client := sdk.New(opts...)
 

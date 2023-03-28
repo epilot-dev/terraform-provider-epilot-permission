@@ -5,6 +5,7 @@ package sdk
 import (
 	"context"
 	"epilotpermissions/internal/sdk/pkg/models/operations"
+	"epilotpermissions/internal/sdk/pkg/models/shared"
 	"epilotpermissions/internal/sdk/pkg/utils"
 	"fmt"
 	"net/http"
@@ -65,17 +66,12 @@ func (s *roles) DeleteRole(ctx context.Context, request operations.DeleteRoleReq
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out interface{}
+			var out *shared.Role
 			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
 				return nil, err
 			}
 
-			return operations.NewDeleteRoleResponse(map[string]interface{}{
-				"StatusCode":  float64(httpRes.StatusCode),
-				"Role":        out,
-				"ContentType": contentType,
-				"RawResponse": *httpRes,
-			})
+			res.Role = out
 		}
 	}
 
@@ -115,17 +111,12 @@ func (s *roles) GetRole(ctx context.Context, request operations.GetRoleRequest) 
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out interface{}
+			var out *shared.Role
 			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
 				return nil, err
 			}
 
-			return operations.NewGetRoleResponse(map[string]interface{}{
-				"StatusCode":  float64(httpRes.StatusCode),
-				"Role":        out,
-				"ContentType": contentType,
-				"RawResponse": *httpRes,
-			})
+			res.Role = out
 		}
 	}
 
@@ -165,14 +156,12 @@ func (s *roles) ListAllRoles(ctx context.Context) (*operations.ListAllRolesRespo
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out interface{}
+			var out *operations.ListAllRoles200ApplicationJSON
 			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
 				return nil, err
 			}
-			res.ListAllRoles200ApplicationJSONObject, err = operations.NewListAllRoles200ApplicationJSON(out)
-			if err != nil {
-				return nil, fmt.Errorf("error validating response body: %w", err)
-			}
+
+			res.ListAllRoles200ApplicationJSONObject = out
 		}
 	}
 
@@ -212,14 +201,12 @@ func (s *roles) ListCurrentRoles(ctx context.Context) (*operations.ListCurrentRo
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out interface{}
+			var out *operations.ListCurrentRoles200ApplicationJSON
 			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
 				return nil, err
 			}
-			res.ListCurrentRoles200ApplicationJSONObject, err = operations.NewListCurrentRoles200ApplicationJSON(out)
-			if err != nil {
-				return nil, fmt.Errorf("error validating response body: %w", err)
-			}
+
+			res.ListCurrentRoles200ApplicationJSONObject = out
 		}
 	}
 
@@ -266,17 +253,12 @@ func (s *roles) PutRole(ctx context.Context, request operations.PutRoleRequest) 
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out interface{}
+			var out *shared.Role
 			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
 				return nil, err
 			}
 
-			return operations.NewPutRoleResponse(map[string]interface{}{
-				"StatusCode":  float64(httpRes.StatusCode),
-				"Role":        out,
-				"ContentType": contentType,
-				"RawResponse": *httpRes,
-			})
+			res.Role = out
 		}
 	}
 
@@ -359,14 +341,12 @@ func (s *roles) SearchRoles(ctx context.Context, request operations.SearchRolesR
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out interface{}
+			var out *operations.SearchRoles200ApplicationJSON
 			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
 				return nil, err
 			}
-			res.SearchRoles200ApplicationJSONObject, err = operations.NewSearchRoles200ApplicationJSON(out)
-			if err != nil {
-				return nil, fmt.Errorf("error validating response body: %w", err)
-			}
+
+			res.SearchRoles200ApplicationJSONObject = out
 		}
 	}
 

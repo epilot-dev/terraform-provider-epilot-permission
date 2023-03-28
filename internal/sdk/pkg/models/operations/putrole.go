@@ -4,7 +4,6 @@ package operations
 
 import (
 	"epilotpermissions/internal/sdk/pkg/models/shared"
-	"fmt"
 	"net/http"
 )
 
@@ -12,217 +11,15 @@ type PutRolePathParams struct {
 	RoleID string `pathParam:"style=simple,explode=false,name=roleId"`
 }
 
-func NewPutRolePathParams(input interface{}) (*PutRolePathParams, error) {
-	mapInput, ok := input.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("putRolePathParams: Expected input to be a map[string]interface{}")
-	}
-	if _, ok = mapInput["roleId"]; !ok {
-		return nil, fmt.Errorf("putRolePathParams: RoleID is required, but was not found")
-	}
-	var roleID string
-	roleID, ok = mapInput["roleId"].(string)
-	if !ok {
-		return nil, fmt.Errorf("putRolePathParams: unexpected type for RoleID. Expected string but was %T", mapInput["roleId"])
-	}
-	out := &PutRolePathParams{
-		RoleID: roleID,
-	}
-
-	return out, nil
-}
-
 type PutRoleRequest struct {
 	PathParams PutRolePathParams
-	Request    interface{} `request:"mediaType=application/json"`
-}
-
-func NewPutRoleRequest(input interface{}) (*PutRoleRequest, error) {
-	mapInput, ok := input.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("putRoleRequest: Expected input to be a map[string]interface{}")
-	}
-	if _, ok = mapInput["PathParams"]; !ok {
-		return nil, fmt.Errorf("putRoleRequest: PathParams is required, but was not found")
-	}
-	pathParamsPtr, err := NewPutRolePathParams(mapInput["PathParams"])
-	if err != nil {
-		return nil, err
-	}
-	pathParams := *pathParamsPtr
-	var request interface{}
-	pickFirstValidRequest := make([]func(interface{}) (interface{}, error), 0)
-	pickFirstValidRequest = append(pickFirstValidRequest, func(sharedUserRoleInput interface{}) (interface{}, error) {
-		var sharedUserRoleOutput *shared.UserRole
-		if sharedUserRoleInput != nil {
-			requestTmp, err := shared.NewUserRole(sharedUserRoleInput)
-			if err != nil {
-				return nil, err
-			}
-			sharedUserRoleOutput = requestTmp
-		}
-		return sharedUserRoleOutput, nil
-	})
-	pickFirstValidRequest = append(pickFirstValidRequest, func(sharedOrgRoleInput interface{}) (interface{}, error) {
-		var sharedOrgRoleOutput *shared.OrgRole
-		if sharedOrgRoleInput != nil {
-			requestTmp1, err := shared.NewOrgRole(sharedOrgRoleInput)
-			if err != nil {
-				return nil, err
-			}
-			sharedOrgRoleOutput = requestTmp1
-		}
-		return sharedOrgRoleOutput, nil
-	})
-	pickFirstValidRequest = append(pickFirstValidRequest, func(sharedShareRoleInput interface{}) (interface{}, error) {
-		var sharedShareRoleOutput *shared.ShareRole
-		if sharedShareRoleInput != nil {
-			requestTmp2, err := shared.NewShareRole(sharedShareRoleInput)
-			if err != nil {
-				return nil, err
-			}
-			sharedShareRoleOutput = requestTmp2
-		}
-		return sharedShareRoleOutput, nil
-	})
-	pickFirstValidRequest = append(pickFirstValidRequest, func(sharedPartnerRoleInput interface{}) (interface{}, error) {
-		var sharedPartnerRoleOutput *shared.PartnerRole
-		if sharedPartnerRoleInput != nil {
-			requestTmp3, err := shared.NewPartnerRole(sharedPartnerRoleInput)
-			if err != nil {
-				return nil, err
-			}
-			sharedPartnerRoleOutput = requestTmp3
-		}
-		return sharedPartnerRoleOutput, nil
-	})
-	for _, requestChecker := range pickFirstValidRequest {
-		var requestErr error
-		request, requestErr = requestChecker(mapInput["Request"])
-		if requestErr == nil {
-			break
-		}
-	}
-	if request == nil {
-		return nil, fmt.Errorf("putRoleRequest: unexpected type for Request. Expected one of shared.UserRole, shared.OrgRole, shared.ShareRole, shared.PartnerRole to be valid. Got %#v", mapInput["Request"])
-	}
-	out := &PutRoleRequest{
-		PathParams: pathParams,
-		Request:    request,
-	}
-
-	return out, nil
+	Request    *shared.Role `request:"mediaType=application/json"`
 }
 
 type PutRoleResponse struct {
 	ContentType string
 	// ok
-	Role        interface{}
+	Role        *shared.Role
 	StatusCode  int
 	RawResponse *http.Response
-}
-
-func NewPutRoleResponse(input interface{}) (*PutRoleResponse, error) {
-	mapInput, ok := input.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("putRoleResponse: Expected input to be a map[string]interface{}")
-	}
-	if _, ok = mapInput["ContentType"]; !ok {
-		return nil, fmt.Errorf("putRoleResponse: ContentType is required, but was not found")
-	}
-	var contentType string
-	contentType, ok = mapInput["ContentType"].(string)
-	if !ok {
-		return nil, fmt.Errorf("putRoleResponse: unexpected type for ContentType. Expected string but was %T", mapInput["ContentType"])
-	}
-	var role interface{}
-	pickFirstValidRole := make([]func(interface{}) (interface{}, error), 0)
-	pickFirstValidRole = append(pickFirstValidRole, func(sharedUserRoleInput interface{}) (interface{}, error) {
-		var sharedUserRoleOutput *shared.UserRole
-		if sharedUserRoleInput != nil {
-			roleTmp, err := shared.NewUserRole(sharedUserRoleInput)
-			if err != nil {
-				return nil, err
-			}
-			sharedUserRoleOutput = roleTmp
-		}
-		return sharedUserRoleOutput, nil
-	})
-	pickFirstValidRole = append(pickFirstValidRole, func(sharedOrgRoleInput interface{}) (interface{}, error) {
-		var sharedOrgRoleOutput *shared.OrgRole
-		if sharedOrgRoleInput != nil {
-			roleTmp1, err := shared.NewOrgRole(sharedOrgRoleInput)
-			if err != nil {
-				return nil, err
-			}
-			sharedOrgRoleOutput = roleTmp1
-		}
-		return sharedOrgRoleOutput, nil
-	})
-	pickFirstValidRole = append(pickFirstValidRole, func(sharedShareRoleInput interface{}) (interface{}, error) {
-		var sharedShareRoleOutput *shared.ShareRole
-		if sharedShareRoleInput != nil {
-			roleTmp2, err := shared.NewShareRole(sharedShareRoleInput)
-			if err != nil {
-				return nil, err
-			}
-			sharedShareRoleOutput = roleTmp2
-		}
-		return sharedShareRoleOutput, nil
-	})
-	pickFirstValidRole = append(pickFirstValidRole, func(sharedPartnerRoleInput interface{}) (interface{}, error) {
-		var sharedPartnerRoleOutput *shared.PartnerRole
-		if sharedPartnerRoleInput != nil {
-			roleTmp3, err := shared.NewPartnerRole(sharedPartnerRoleInput)
-			if err != nil {
-				return nil, err
-			}
-			sharedPartnerRoleOutput = roleTmp3
-		}
-		return sharedPartnerRoleOutput, nil
-	})
-	for _, roleChecker := range pickFirstValidRole {
-		var roleErr error
-		role, roleErr = roleChecker(mapInput["Role"])
-		if roleErr == nil {
-			break
-		}
-	}
-	if role == nil {
-		return nil, fmt.Errorf("putRoleResponse: unexpected type for Role. Expected one of shared.UserRole, shared.OrgRole, shared.ShareRole, shared.PartnerRole to be valid. Got %#v", mapInput["Role"])
-	}
-	if _, ok = mapInput["StatusCode"]; !ok {
-		return nil, fmt.Errorf("putRoleResponse: StatusCode is required, but was not found")
-	}
-	if _, ok = mapInput["StatusCode"]; !ok {
-		return nil, fmt.Errorf("putRoleResponse: StatusCode is required, but was not found")
-	}
-	var statusCodeFloat64 float64
-	statusCodeFloat64, ok = mapInput["StatusCode"].(float64)
-	if !ok {
-		return nil, fmt.Errorf("putRoleResponse: unexpected type for StatusCode. Expected float64 but was %T", mapInput["StatusCode"])
-	}
-	var statusCode int
-	if statusCodeFloat64 != float64(int(statusCodeFloat64)) {
-		return nil, fmt.Errorf("putRoleResponse: unexpected value for integer StatusCode. Got %#v", mapInput["StatusCode"])
-	} else {
-		statusCode = int(statusCodeFloat64)
-	}
-	rawResponse := new(http.Response)
-	if _, ok = mapInput["RawResponse"]; !ok {
-		rawResponse = nil
-	} else {
-		*rawResponse, ok = mapInput["RawResponse"].(http.Response)
-		if !ok {
-			return nil, fmt.Errorf("putRoleResponse: unexpected type for RawResponse. Expected http.Response but was %T", mapInput["RawResponse"])
-		}
-	}
-	out := &PutRoleResponse{
-		ContentType: contentType,
-		Role:        role,
-		StatusCode:  statusCode,
-		RawResponse: rawResponse,
-	}
-
-	return out, nil
 }

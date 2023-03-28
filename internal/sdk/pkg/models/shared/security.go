@@ -2,88 +2,15 @@
 
 package shared
 
-import (
-	"fmt"
-)
-
 type SchemeEpilotAuth struct {
 	Authorization string `security:"name=Authorization"`
-}
-
-func NewSchemeEpilotAuth(input interface{}) (*SchemeEpilotAuth, error) {
-	mapInput, ok := input.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("SchemeEpilotAuth: Expected input to be a map[string]interface{}")
-	}
-	if _, ok = mapInput["Authorization"]; !ok {
-		return nil, fmt.Errorf("SchemeEpilotAuth: Authorization is required, but was not found")
-	}
-	var authorization string
-	authorization, ok = mapInput["Authorization"].(string)
-	if !ok {
-		return nil, fmt.Errorf("SchemeEpilotAuth: unexpected type for Authorization. Expected string but was %T", mapInput["Authorization"])
-	}
-	out := &SchemeEpilotAuth{
-		Authorization: authorization,
-	}
-
-	return out, nil
 }
 
 type SchemeEpilotOrg struct {
 	APIKey string `security:"name=x-epilot-org-id"`
 }
 
-func NewSchemeEpilotOrg(input interface{}) (*SchemeEpilotOrg, error) {
-	mapInput, ok := input.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("SchemeEpilotOrg: Expected input to be a map[string]interface{}")
-	}
-	if _, ok = mapInput["apiKey"]; !ok {
-		return nil, fmt.Errorf("SchemeEpilotOrg: APIKey is required, but was not found")
-	}
-	var apiKey string
-	apiKey, ok = mapInput["apiKey"].(string)
-	if !ok {
-		return nil, fmt.Errorf("SchemeEpilotOrg: unexpected type for APIKey. Expected string but was %T", mapInput["apiKey"])
-	}
-	out := &SchemeEpilotOrg{
-		APIKey: apiKey,
-	}
-
-	return out, nil
-}
-
 type Security struct {
 	EpilotAuth *SchemeEpilotAuth `security:"scheme,type=http,subtype=bearer"`
 	EpilotOrg  *SchemeEpilotOrg  `security:"scheme,type=apiKey,subtype=header"`
-}
-
-func NewSecurity(input interface{}) (*Security, error) {
-	mapInput, ok := input.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("Security: Expected input to be a map[string]interface{}")
-	}
-	var epilotAuth *SchemeEpilotAuth
-	if mapInput["EpilotAuth"] != nil {
-		epilotAuthTmp, err := NewSchemeEpilotAuth(mapInput["EpilotAuth"])
-		if err != nil {
-			return nil, err
-		}
-		epilotAuth = epilotAuthTmp
-	}
-	var epilotOrg *SchemeEpilotOrg
-	if mapInput["EpilotOrg"] != nil {
-		epilotOrgTmp, err := NewSchemeEpilotOrg(mapInput["EpilotOrg"])
-		if err != nil {
-			return nil, err
-		}
-		epilotOrg = epilotOrgTmp
-	}
-	out := &Security{
-		EpilotAuth: epilotAuth,
-		EpilotOrg:  epilotOrg,
-	}
-
-	return out, nil
 }
