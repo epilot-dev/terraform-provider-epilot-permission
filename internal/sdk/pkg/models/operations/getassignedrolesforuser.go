@@ -6,12 +6,8 @@ import (
 	"net/http"
 )
 
-type GetAssignedRolesForUserPathParams struct {
-	UserID string `pathParam:"style=simple,explode=false,name=userId"`
-}
-
 type GetAssignedRolesForUserRequest struct {
-	PathParams GetAssignedRolesForUserPathParams
+	UserID string `pathParam:"style=simple,explode=false,name=userId"`
 }
 
 type GetAssignedRolesForUserResponse struct {

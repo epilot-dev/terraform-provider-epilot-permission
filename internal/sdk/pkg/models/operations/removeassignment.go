@@ -7,13 +7,9 @@ import (
 	"net/http"
 )
 
-type RemoveAssignmentPathParams struct {
+type RemoveAssignmentRequest struct {
 	RoleID string `pathParam:"style=simple,explode=false,name=roleId"`
 	UserID string `pathParam:"style=simple,explode=false,name=userId"`
-}
-
-type RemoveAssignmentRequest struct {
-	PathParams RemoveAssignmentPathParams
 }
 
 type RemoveAssignmentResponse struct {

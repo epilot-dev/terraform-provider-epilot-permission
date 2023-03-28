@@ -7,12 +7,8 @@ import (
 	"net/http"
 )
 
-type GetRolePathParams struct {
-	RoleID string `pathParam:"style=simple,explode=false,name=roleId"`
-}
-
 type GetRoleRequest struct {
-	PathParams GetRolePathParams
+	RoleID string `pathParam:"style=simple,explode=false,name=roleId"`
 }
 
 type GetRoleResponse struct {

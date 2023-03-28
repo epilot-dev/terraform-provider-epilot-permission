@@ -375,14 +375,11 @@ func (r *RoleResource) Create(ctx context.Context, req resource.CreateRequest, r
 	}
 
 	role := data.ToSDKType()
+	role1 := role
 	roleID := reflect.Indirect(reflect.ValueOf(reflect.Indirect(reflect.ValueOf(role)).Interface())).FieldByName("ID").String()
-	pathParams := operations.PutRolePathParams{
-		RoleID: roleID,
-	}
-	request1 := role
 	request := operations.PutRoleRequest{
-		PathParams: pathParams,
-		Request:    request1,
+		Role:   role1,
+		RoleID: roleID,
 	}
 	res, err := r.client.Roles.PutRole(ctx, request)
 	if err != nil {
@@ -427,11 +424,8 @@ func (r *RoleResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 
 	role := data.ToSDKType()
 	roleID := reflect.Indirect(reflect.ValueOf(reflect.Indirect(reflect.ValueOf(role)).Interface())).FieldByName("ID").String()
-	pathParams := operations.GetRolePathParams{
-		RoleID: roleID,
-	}
 	request := operations.GetRoleRequest{
-		PathParams: pathParams,
+		RoleID: roleID,
 	}
 	res, err := r.client.Roles.GetRole(ctx, request)
 	if err != nil {
@@ -475,14 +469,11 @@ func (r *RoleResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	}
 
 	role := data.ToSDKType()
+	role1 := role
 	roleID := reflect.Indirect(reflect.ValueOf(reflect.Indirect(reflect.ValueOf(role)).Interface())).FieldByName("ID").String()
-	pathParams := operations.PutRolePathParams{
-		RoleID: roleID,
-	}
-	request1 := role
 	request := operations.PutRoleRequest{
-		PathParams: pathParams,
-		Request:    request1,
+		Role:   role1,
+		RoleID: roleID,
 	}
 	res, err := r.client.Roles.PutRole(ctx, request)
 	if err != nil {
@@ -527,11 +518,8 @@ func (r *RoleResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 
 	role := data.ToSDKType()
 	roleID := reflect.Indirect(reflect.ValueOf(reflect.Indirect(reflect.ValueOf(role)).Interface())).FieldByName("ID").String()
-	pathParams := operations.DeleteRolePathParams{
-		RoleID: roleID,
-	}
 	request := operations.DeleteRoleRequest{
-		PathParams: pathParams,
+		RoleID: roleID,
 	}
 	res, err := r.client.Roles.DeleteRole(ctx, request)
 	if err != nil {
@@ -544,10 +532,6 @@ func (r *RoleResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
-		return
-	}
-	if res.Role == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
 

@@ -25,9 +25,9 @@ type EpilotpermissionsProvider struct {
 
 // EpilotpermissionsProviderModel describes the provider data model.
 type EpilotpermissionsProviderModel struct {
-	ServerURL     types.String `tfsdk:"server_url"`
-	Authorization types.String `tfsdk:"authorization"`
-	APIKey        types.String `tfsdk:"api_key"`
+	ServerURL  types.String `tfsdk:"server_url"`
+	EpilotAuth types.String `tfsdk:"epilot_auth"`
+	EpilotOrg  types.String `tfsdk:"epilot_org"`
 }
 
 func (p *EpilotpermissionsProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -42,11 +42,11 @@ func (p *EpilotpermissionsProvider) Schema(ctx context.Context, req provider.Sch
 				MarkdownDescription: "Server URL (defaults to https://permissions.sls.epilot.io)",
 				Optional:            true,
 			},
-			"authorization": schema.StringAttribute{
+			"epilot_auth": schema.StringAttribute{
 				Optional:  true,
 				Sensitive: true,
 			},
-			"api_key": schema.StringAttribute{
+			"epilot_org": schema.StringAttribute{
 				Optional:  true,
 				Sensitive: true,
 			},
@@ -69,15 +69,17 @@ func (p *EpilotpermissionsProvider) Configure(ctx context.Context, req provider.
 		ServerURL = "https://permissions.sls.epilot.io"
 	}
 
-	var epilotAuth *shared.SchemeEpilotAuth
-	authorization := data.Authorization.ValueString()
-	epilotAuth = &shared.SchemeEpilotAuth{
-		Authorization: authorization,
+	epilotAuth := new(string)
+	if !data.EpilotAuth.IsUnknown() && !data.EpilotAuth.IsNull() {
+		*epilotAuth = data.EpilotAuth.ValueString()
+	} else {
+		epilotAuth = nil
 	}
-	var epilotOrg *shared.SchemeEpilotOrg
-	apiKey := data.APIKey.ValueString()
-	epilotOrg = &shared.SchemeEpilotOrg{
-		APIKey: apiKey,
+	epilotOrg := new(string)
+	if !data.EpilotOrg.IsUnknown() && !data.EpilotOrg.IsNull() {
+		*epilotOrg = data.EpilotOrg.ValueString()
+	} else {
+		epilotOrg = nil
 	}
 	security := shared.Security{
 		EpilotAuth: epilotAuth,
@@ -96,8 +98,8 @@ func (p *EpilotpermissionsProvider) Configure(ctx context.Context, req provider.
 
 func (p *EpilotpermissionsProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
-		NewAssignmentResource,
 		NewRoleResource,
+		NewAssignmentResource,
 	}
 }
 

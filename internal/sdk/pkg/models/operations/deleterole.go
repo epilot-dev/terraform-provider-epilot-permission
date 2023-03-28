@@ -7,12 +7,8 @@ import (
 	"net/http"
 )
 
-type DeleteRolePathParams struct {
-	RoleID string `pathParam:"style=simple,explode=false,name=roleId"`
-}
-
 type DeleteRoleRequest struct {
-	PathParams DeleteRolePathParams
+	RoleID string `pathParam:"style=simple,explode=false,name=roleId"`
 }
 
 type DeleteRoleResponse struct {

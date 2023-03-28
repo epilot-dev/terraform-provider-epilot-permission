@@ -6,13 +6,9 @@ import (
 	"net/http"
 )
 
-type AssignRolesPathParams struct {
-	UserID string `pathParam:"style=simple,explode=false,name=userId"`
-}
-
 type AssignRolesRequest struct {
-	PathParams AssignRolesPathParams
-	Request    []string `request:"mediaType=application/json"`
+	RequestBody []string `request:"mediaType=application/json"`
+	UserID      string   `pathParam:"style=simple,explode=false,name=userId"`
 }
 
 type AssignRolesResponse struct {

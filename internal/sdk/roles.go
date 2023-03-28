@@ -37,7 +37,7 @@ func newRoles(defaultClient, securityClient HTTPClient, serverURL, language, sdk
 // Delete role by id
 func (s *roles) DeleteRole(ctx context.Context, request operations.DeleteRoleRequest) (*operations.DeleteRoleResponse, error) {
 	baseURL := s.serverURL
-	url := utils.GenerateURL(ctx, baseURL, "/v1/permissions/roles/{roleId}", request.PathParams, nil)
+	url := utils.GenerateURL(ctx, baseURL, "/v1/permissions/roles/{roleId}", request, nil)
 
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {
@@ -82,7 +82,7 @@ func (s *roles) DeleteRole(ctx context.Context, request operations.DeleteRoleReq
 // Get role by id
 func (s *roles) GetRole(ctx context.Context, request operations.GetRoleRequest) (*operations.GetRoleResponse, error) {
 	baseURL := s.serverURL
-	url := utils.GenerateURL(ctx, baseURL, "/v1/permissions/roles/{roleId}", request.PathParams, nil)
+	url := utils.GenerateURL(ctx, baseURL, "/v1/permissions/roles/{roleId}", request, nil)
 
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -217,9 +217,9 @@ func (s *roles) ListCurrentRoles(ctx context.Context) (*operations.ListCurrentRo
 // Create or update role
 func (s *roles) PutRole(ctx context.Context, request operations.PutRoleRequest) (*operations.PutRoleResponse, error) {
 	baseURL := s.serverURL
-	url := utils.GenerateURL(ctx, baseURL, "/v1/permissions/roles/{roleId}", request.PathParams, nil)
+	url := utils.GenerateURL(ctx, baseURL, "/v1/permissions/roles/{roleId}", request, nil)
 
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, "Request", "json")
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, "Role", "json")
 	if err != nil {
 		return nil, fmt.Errorf("error serializing request body: %w", err)
 	}
@@ -303,7 +303,7 @@ func (s *roles) RefreshPermissions(ctx context.Context) (*operations.RefreshPerm
 
 // SearchRoles - searchRoles
 // Search Roles
-func (s *roles) SearchRoles(ctx context.Context, request operations.SearchRolesRequest) (*operations.SearchRolesResponse, error) {
+func (s *roles) SearchRoles(ctx context.Context, request shared.RoleSearchInput) (*operations.SearchRolesResponse, error) {
 	baseURL := s.serverURL
 	url := strings.TrimSuffix(baseURL, "/") + "/v1/permissions/roles:search"
 

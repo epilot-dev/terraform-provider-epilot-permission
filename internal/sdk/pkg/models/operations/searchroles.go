@@ -7,10 +7,6 @@ import (
 	"net/http"
 )
 
-type SearchRolesRequest struct {
-	Request *shared.RoleSearchInput `request:"mediaType=application/json"`
-}
-
 // SearchRoles200ApplicationJSON - ok
 type SearchRoles200ApplicationJSON struct {
 	Hits    *float64      `json:"hits,omitempty"`

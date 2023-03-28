@@ -108,12 +108,9 @@ func (r *AssignmentResource) Create(ctx context.Context, req resource.CreateRequ
 
 	roleID := data.RoleID.ValueString()
 	userID := data.UserID.ValueString()
-	pathParams := operations.AddAssignmentPathParams{
+	request := operations.AddAssignmentRequest{
 		RoleID: roleID,
 		UserID: userID,
-	}
-	request := operations.AddAssignmentRequest{
-		PathParams: pathParams,
 	}
 	res, err := r.client.Assignments.AddAssignment(ctx, request)
 	if err != nil {
@@ -206,12 +203,9 @@ func (r *AssignmentResource) Delete(ctx context.Context, req resource.DeleteRequ
 
 	roleID := data.RoleID.ValueString()
 	userID := data.UserID.ValueString()
-	pathParams := operations.RemoveAssignmentPathParams{
+	request := operations.RemoveAssignmentRequest{
 		RoleID: roleID,
 		UserID: userID,
-	}
-	request := operations.RemoveAssignmentRequest{
-		PathParams: pathParams,
 	}
 	res, err := r.client.Assignments.RemoveAssignment(ctx, request)
 	if err != nil {
@@ -224,10 +218,6 @@ func (r *AssignmentResource) Delete(ctx context.Context, req resource.DeleteRequ
 	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
-		return
-	}
-	if res.Assignment == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
 

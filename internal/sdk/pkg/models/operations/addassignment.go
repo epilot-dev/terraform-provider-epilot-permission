@@ -7,13 +7,9 @@ import (
 	"net/http"
 )
 
-type AddAssignmentPathParams struct {
+type AddAssignmentRequest struct {
 	RoleID string `pathParam:"style=simple,explode=false,name=roleId"`
 	UserID string `pathParam:"style=simple,explode=false,name=userId"`
-}
-
-type AddAssignmentRequest struct {
-	PathParams AddAssignmentPathParams
 }
 
 type AddAssignmentResponse struct {

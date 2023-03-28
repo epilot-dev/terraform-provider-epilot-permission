@@ -7,13 +7,9 @@ import (
 	"net/http"
 )
 
-type PutRolePathParams struct {
-	RoleID string `pathParam:"style=simple,explode=false,name=roleId"`
-}
-
 type PutRoleRequest struct {
-	PathParams PutRolePathParams
-	Request    *shared.Role `request:"mediaType=application/json"`
+	Role   *shared.Role `request:"mediaType=application/json"`
+	RoleID string       `pathParam:"style=simple,explode=false,name=roleId"`
 }
 
 type PutRoleResponse struct {
