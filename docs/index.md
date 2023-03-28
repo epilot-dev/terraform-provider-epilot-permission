@@ -17,6 +17,6 @@ description: |-
 
 ### Optional
 
-- `apikey` (String, Sensitive)
-- `authorization` (String, Sensitive)
+- `epilot_auth` (String, Sensitive)
+- `epilot_org` (String, Sensitive)
 - `server_url` (String) Server URL (defaults to https://permissions.sls.epilot.io)
