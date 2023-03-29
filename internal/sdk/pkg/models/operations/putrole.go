@@ -3,7 +3,7 @@
 package operations
 
 import (
-	"epilotpermissions/internal/sdk/pkg/models/shared"
+	"epilot-permission/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 

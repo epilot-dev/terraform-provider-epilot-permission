@@ -12,7 +12,7 @@
 <!-- Start SDK Installation -->
 ## Notice of Alpha Status
 
-This is a Alpha release of the epilotpermissions Terraform Provider.
+This is a Alpha release of the epilot-permission Terraform Provider.
 
 It is under active development and you may experience breaking changes. Please pin to a version if trialing in production.
 
@@ -23,14 +23,14 @@ To install this provider, copy and paste this code into your Terraform configura
 ```hcl
 terraform {
   required_providers {
-    epilotpermissions = {
-      source  = "epilot/epilotpermissions"
-      version = "0.0.1"
+    epilot-permission = {
+      source  = "epilot-dev/epilot-permission"
+      version = "0.0.2"
     }
   }
 }
 
-provider "epilotpermissions" {
+provider "epilot-permission" {
   # Configuration options
 }
 ```

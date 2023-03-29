@@ -4,8 +4,8 @@ package provider
 
 import (
 	"context"
-	"epilotpermissions/internal/sdk"
-	"epilotpermissions/internal/sdk/pkg/models/operations"
+	"epilot-permission/internal/sdk"
+	"epilot-permission/internal/sdk/pkg/models/operations"
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"

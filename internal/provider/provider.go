@@ -4,8 +4,8 @@ package provider
 
 import (
 	"context"
-	"epilotpermissions/internal/sdk"
-	"epilotpermissions/internal/sdk/pkg/models/shared"
+	"epilot-permission/internal/sdk"
+	"epilot-permission/internal/sdk/pkg/models/shared"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
@@ -14,28 +14,28 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-var _ provider.Provider = &EpilotpermissionsProvider{}
+var _ provider.Provider = &EpilotPermissionProvider{}
 
-type EpilotpermissionsProvider struct {
+type EpilotPermissionProvider struct {
 	// version is set to the provider version on release, "dev" when the
 	// provider is built and ran locally, and "test" when running acceptance
 	// testing.
 	version string
 }
 
-// EpilotpermissionsProviderModel describes the provider data model.
-type EpilotpermissionsProviderModel struct {
+// EpilotPermissionProviderModel describes the provider data model.
+type EpilotPermissionProviderModel struct {
 	ServerURL  types.String `tfsdk:"server_url"`
 	EpilotAuth types.String `tfsdk:"epilot_auth"`
 	EpilotOrg  types.String `tfsdk:"epilot_org"`
 }
 
-func (p *EpilotpermissionsProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
-	resp.TypeName = "epilotpermissions"
+func (p *EpilotPermissionProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
+	resp.TypeName = "epilot-permission"
 	resp.Version = p.version
 }
 
-func (p *EpilotpermissionsProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
+func (p *EpilotPermissionProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"server_url": schema.StringAttribute{
@@ -54,8 +54,8 @@ func (p *EpilotpermissionsProvider) Schema(ctx context.Context, req provider.Sch
 	}
 }
 
-func (p *EpilotpermissionsProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
-	var data EpilotpermissionsProviderModel
+func (p *EpilotPermissionProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
+	var data EpilotPermissionProviderModel
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
@@ -96,20 +96,20 @@ func (p *EpilotpermissionsProvider) Configure(ctx context.Context, req provider.
 	resp.ResourceData = client
 }
 
-func (p *EpilotpermissionsProvider) Resources(ctx context.Context) []func() resource.Resource {
+func (p *EpilotPermissionProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewRoleResource,
 		NewAssignmentResource,
 	}
 }
 
-func (p *EpilotpermissionsProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
+func (p *EpilotPermissionProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{}
 }
 
 func New(version string) func() provider.Provider {
 	return func() provider.Provider {
-		return &EpilotpermissionsProvider{
+		return &EpilotPermissionProvider{
 			version: version,
 		}
 	}

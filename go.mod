@@ -1,4 +1,4 @@
-module epilotpermissions
+module epilot-permission
 
 go 1.18
 

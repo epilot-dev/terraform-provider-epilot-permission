@@ -4,9 +4,9 @@ package sdk
 
 import (
 	"context"
-	"epilotpermissions/internal/sdk/pkg/models/operations"
-	"epilotpermissions/internal/sdk/pkg/models/shared"
-	"epilotpermissions/internal/sdk/pkg/utils"
+	"epilot-permission/internal/sdk/pkg/models/operations"
+	"epilot-permission/internal/sdk/pkg/models/shared"
+	"epilot-permission/internal/sdk/pkg/utils"
 	"fmt"
 	"net/http"
 	"strings"
@@ -55,7 +55,6 @@ func (s *assignments) AddAssignment(ctx context.Context, request operations.AddA
 	if httpRes == nil {
 		return nil, fmt.Errorf("error sending request: no response")
 	}
-	defer httpRes.Body.Close()
 
 	contentType := httpRes.Header.Get("Content-Type")
 
@@ -107,7 +106,6 @@ func (s *assignments) AssignRoles(ctx context.Context, request operations.Assign
 	if httpRes == nil {
 		return nil, fmt.Errorf("error sending request: no response")
 	}
-	defer httpRes.Body.Close()
 
 	contentType := httpRes.Header.Get("Content-Type")
 
@@ -152,7 +150,6 @@ func (s *assignments) GetAssignedRolesForUser(ctx context.Context, request opera
 	if httpRes == nil {
 		return nil, fmt.Errorf("error sending request: no response")
 	}
-	defer httpRes.Body.Close()
 
 	contentType := httpRes.Header.Get("Content-Type")
 
@@ -197,7 +194,6 @@ func (s *assignments) ListAllAssignments(ctx context.Context) (*operations.ListA
 	if httpRes == nil {
 		return nil, fmt.Errorf("error sending request: no response")
 	}
-	defer httpRes.Body.Close()
 
 	contentType := httpRes.Header.Get("Content-Type")
 
@@ -242,7 +238,6 @@ func (s *assignments) RemoveAssignment(ctx context.Context, request operations.R
 	if httpRes == nil {
 		return nil, fmt.Errorf("error sending request: no response")
 	}
-	defer httpRes.Body.Close()
 
 	contentType := httpRes.Header.Get("Content-Type")
 

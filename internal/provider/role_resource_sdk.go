@@ -3,7 +3,7 @@
 package provider
 
 import (
-	"epilotpermissions/internal/sdk/pkg/models/shared"
+	"epilot-permission/internal/sdk/pkg/models/shared"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"reflect"
 	"time"

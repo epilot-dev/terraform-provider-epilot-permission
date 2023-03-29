@@ -4,12 +4,12 @@ package provider
 
 import (
 	"context"
-	"epilotpermissions/internal/sdk"
-	"epilotpermissions/internal/sdk/pkg/models/operations"
+	"epilot-permission/internal/sdk"
+	"epilot-permission/internal/sdk/pkg/models/operations"
 	"fmt"
 	"reflect"
 
-	"epilotpermissions/internal/validators"
+	"epilot-permission/internal/validators"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 
