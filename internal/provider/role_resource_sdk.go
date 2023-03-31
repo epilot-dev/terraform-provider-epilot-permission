@@ -5,7 +5,6 @@ package provider
 import (
 	"epilot-permission/internal/sdk/pkg/models/shared"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"reflect"
 	"time"
 )
 
@@ -342,9 +341,9 @@ func (r *RoleResourceModel) RefreshFromSDKType(resp *shared.Role) {
 		r.Role.PartnerRole.Type = types.StringValue(string(resp.PartnerRole.Type))
 	}
 	// Unwrap done. Flattening in
-	r.ID = types.StringValue(reflect.Indirect(reflect.ValueOf(resp)).FieldByName("ID").String())
-	r.Name = types.StringValue(reflect.Indirect(reflect.ValueOf(resp)).FieldByName("Name").String())
-	r.OrganizationID = types.StringValue(reflect.Indirect(reflect.ValueOf(resp)).FieldByName("OrganizationID").String())
-	r.Slug = types.StringValue(reflect.Indirect(reflect.ValueOf(resp)).FieldByName("Slug").String())
+	r.ID = types.StringValue(reflectJSONKey(resp, "id").String())
+	r.Name = types.StringValue(reflectJSONKey(resp, "name").String())
+	r.OrganizationID = types.StringValue(reflectJSONKey(resp, "organization_id").String())
+	r.Slug = types.StringValue(reflectJSONKey(resp, "slug").String())
 
 }

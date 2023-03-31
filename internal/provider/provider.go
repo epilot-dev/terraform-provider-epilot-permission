@@ -98,8 +98,8 @@ func (p *EpilotPermissionProvider) Configure(ctx context.Context, req provider.C
 
 func (p *EpilotPermissionProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
-		NewRoleResource,
 		NewAssignmentResource,
+		NewRoleResource,
 	}
 }
 

@@ -7,7 +7,6 @@ import (
 	"epilot-permission/internal/sdk"
 	"epilot-permission/internal/sdk/pkg/models/operations"
 	"fmt"
-	"reflect"
 
 	"epilot-permission/internal/validators"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -376,7 +375,7 @@ func (r *RoleResource) Create(ctx context.Context, req resource.CreateRequest, r
 
 	role := data.ToSDKType()
 	role1 := role
-	roleID := reflect.Indirect(reflect.ValueOf(reflect.Indirect(reflect.ValueOf(role)).Interface())).FieldByName("ID").String()
+	roleID := reflectJSONKey(role, "id").String()
 	request := operations.PutRoleRequest{
 		Role:   role1,
 		RoleID: roleID,
@@ -423,7 +422,7 @@ func (r *RoleResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	}
 
 	role := data.ToSDKType()
-	roleID := reflect.Indirect(reflect.ValueOf(reflect.Indirect(reflect.ValueOf(role)).Interface())).FieldByName("ID").String()
+	roleID := reflectJSONKey(role, "id").String()
 	request := operations.GetRoleRequest{
 		RoleID: roleID,
 	}
@@ -470,7 +469,7 @@ func (r *RoleResource) Update(ctx context.Context, req resource.UpdateRequest, r
 
 	role := data.ToSDKType()
 	role1 := role
-	roleID := reflect.Indirect(reflect.ValueOf(reflect.Indirect(reflect.ValueOf(role)).Interface())).FieldByName("ID").String()
+	roleID := reflectJSONKey(role, "id").String()
 	request := operations.PutRoleRequest{
 		Role:   role1,
 		RoleID: roleID,
@@ -517,7 +516,7 @@ func (r *RoleResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 	}
 
 	role := data.ToSDKType()
-	roleID := reflect.Indirect(reflect.ValueOf(reflect.Indirect(reflect.ValueOf(role)).Interface())).FieldByName("ID").String()
+	roleID := reflectJSONKey(role, "id").String()
 	request := operations.DeleteRoleRequest{
 		RoleID: roleID,
 	}

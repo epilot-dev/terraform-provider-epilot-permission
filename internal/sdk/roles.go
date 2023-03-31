@@ -53,6 +53,7 @@ func (s *roles) DeleteRole(ctx context.Context, request operations.DeleteRoleReq
 	if httpRes == nil {
 		return nil, fmt.Errorf("error sending request: no response")
 	}
+	defer httpRes.Body.Close()
 
 	contentType := httpRes.Header.Get("Content-Type")
 
@@ -97,6 +98,7 @@ func (s *roles) GetRole(ctx context.Context, request operations.GetRoleRequest) 
 	if httpRes == nil {
 		return nil, fmt.Errorf("error sending request: no response")
 	}
+	defer httpRes.Body.Close()
 
 	contentType := httpRes.Header.Get("Content-Type")
 
@@ -141,6 +143,7 @@ func (s *roles) ListAllRoles(ctx context.Context) (*operations.ListAllRolesRespo
 	if httpRes == nil {
 		return nil, fmt.Errorf("error sending request: no response")
 	}
+	defer httpRes.Body.Close()
 
 	contentType := httpRes.Header.Get("Content-Type")
 
@@ -185,6 +188,7 @@ func (s *roles) ListCurrentRoles(ctx context.Context) (*operations.ListCurrentRo
 	if httpRes == nil {
 		return nil, fmt.Errorf("error sending request: no response")
 	}
+	defer httpRes.Body.Close()
 
 	contentType := httpRes.Header.Get("Content-Type")
 
@@ -236,6 +240,7 @@ func (s *roles) PutRole(ctx context.Context, request operations.PutRoleRequest) 
 	if httpRes == nil {
 		return nil, fmt.Errorf("error sending request: no response")
 	}
+	defer httpRes.Body.Close()
 
 	contentType := httpRes.Header.Get("Content-Type")
 
@@ -280,6 +285,7 @@ func (s *roles) RefreshPermissions(ctx context.Context) (*operations.RefreshPerm
 	if httpRes == nil {
 		return nil, fmt.Errorf("error sending request: no response")
 	}
+	defer httpRes.Body.Close()
 
 	contentType := httpRes.Header.Get("Content-Type")
 
@@ -322,6 +328,7 @@ func (s *roles) SearchRoles(ctx context.Context, request shared.RoleSearchInput)
 	if httpRes == nil {
 		return nil, fmt.Errorf("error sending request: no response")
 	}
+	defer httpRes.Body.Close()
 
 	contentType := httpRes.Header.Get("Content-Type")
 
