@@ -14,17 +14,21 @@ const (
 	OrgRoleTypeEnumOrgRole OrgRoleTypeEnum = "org_role"
 )
 
+func (e OrgRoleTypeEnum) ToPointer() *OrgRoleTypeEnum {
+	return &e
+}
+
 func (e *OrgRoleTypeEnum) UnmarshalJSON(data []byte) error {
-	var s string
-	if err := json.Unmarshal(data, &s); err != nil {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
-	switch s {
+	switch v {
 	case "org_role":
-		*e = OrgRoleTypeEnum(s)
+		*e = OrgRoleTypeEnum(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for OrgRoleTypeEnum: %s", s)
+		return fmt.Errorf("invalid value for OrgRoleTypeEnum: %v", v)
 	}
 }
 

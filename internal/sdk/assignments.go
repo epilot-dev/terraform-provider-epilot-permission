@@ -39,7 +39,10 @@ func newAssignments(defaultClient, securityClient HTTPClient, serverURL, languag
 // Use the `x-epilot-org-id` header to assign share roles to users in other orgs
 func (s *assignments) AddAssignment(ctx context.Context, request operations.AddAssignmentRequest) (*operations.AddAssignmentResponse, error) {
 	baseURL := s.serverURL
-	url := utils.GenerateURL(ctx, baseURL, "/v1/permissions/assignments/{userId}/{roleId}", request, nil)
+	url, err := utils.GenerateURL(ctx, baseURL, "/v1/permissions/assignments/{userId}/{roleId}", request, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
 
 	req, err := http.NewRequestWithContext(ctx, "POST", url, nil)
 	if err != nil {
@@ -84,7 +87,10 @@ func (s *assignments) AddAssignment(ctx context.Context, request operations.AddA
 // Assign / unassign roles to users.
 func (s *assignments) AssignRoles(ctx context.Context, request operations.AssignRolesRequest) (*operations.AssignRolesResponse, error) {
 	baseURL := s.serverURL
-	url := utils.GenerateURL(ctx, baseURL, "/v1/permissions/assignments/{userId}", request, nil)
+	url, err := utils.GenerateURL(ctx, baseURL, "/v1/permissions/assignments/{userId}", request, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
 
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, "RequestBody", "json")
 	if err != nil {
@@ -136,7 +142,10 @@ func (s *assignments) AssignRoles(ctx context.Context, request operations.Assign
 // Get list of assigned roles by user id
 func (s *assignments) GetAssignedRolesForUser(ctx context.Context, request operations.GetAssignedRolesForUserRequest) (*operations.GetAssignedRolesForUserResponse, error) {
 	baseURL := s.serverURL
-	url := utils.GenerateURL(ctx, baseURL, "/v1/permissions/assignments/{userId}", request, nil)
+	url, err := utils.GenerateURL(ctx, baseURL, "/v1/permissions/assignments/{userId}", request, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
 
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -226,7 +235,10 @@ func (s *assignments) ListAllAssignments(ctx context.Context) (*operations.ListA
 // Remove role assignment from user
 func (s *assignments) RemoveAssignment(ctx context.Context, request operations.RemoveAssignmentRequest) (*operations.RemoveAssignmentResponse, error) {
 	baseURL := s.serverURL
-	url := utils.GenerateURL(ctx, baseURL, "/v1/permissions/assignments/{userId}/{roleId}", request, nil)
+	url, err := utils.GenerateURL(ctx, baseURL, "/v1/permissions/assignments/{userId}/{roleId}", request, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
 
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {

@@ -37,7 +37,10 @@ func newRoles(defaultClient, securityClient HTTPClient, serverURL, language, sdk
 // Delete role by id
 func (s *roles) DeleteRole(ctx context.Context, request operations.DeleteRoleRequest) (*operations.DeleteRoleResponse, error) {
 	baseURL := s.serverURL
-	url := utils.GenerateURL(ctx, baseURL, "/v1/permissions/roles/{roleId}", request, nil)
+	url, err := utils.GenerateURL(ctx, baseURL, "/v1/permissions/roles/{roleId}", request, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
 
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {
@@ -82,7 +85,10 @@ func (s *roles) DeleteRole(ctx context.Context, request operations.DeleteRoleReq
 // Get role by id
 func (s *roles) GetRole(ctx context.Context, request operations.GetRoleRequest) (*operations.GetRoleResponse, error) {
 	baseURL := s.serverURL
-	url := utils.GenerateURL(ctx, baseURL, "/v1/permissions/roles/{roleId}", request, nil)
+	url, err := utils.GenerateURL(ctx, baseURL, "/v1/permissions/roles/{roleId}", request, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
 
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -217,7 +223,10 @@ func (s *roles) ListCurrentRoles(ctx context.Context) (*operations.ListCurrentRo
 // Create or update role
 func (s *roles) PutRole(ctx context.Context, request operations.PutRoleRequest) (*operations.PutRoleResponse, error) {
 	baseURL := s.serverURL
-	url := utils.GenerateURL(ctx, baseURL, "/v1/permissions/roles/{roleId}", request, nil)
+	url, err := utils.GenerateURL(ctx, baseURL, "/v1/permissions/roles/{roleId}", request, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
 
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, "Role", "json")
 	if err != nil {

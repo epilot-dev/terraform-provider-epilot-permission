@@ -14,17 +14,21 @@ const (
 	PartnerRoleTypeEnumPartnerRole PartnerRoleTypeEnum = "partner_role"
 )
 
+func (e PartnerRoleTypeEnum) ToPointer() *PartnerRoleTypeEnum {
+	return &e
+}
+
 func (e *PartnerRoleTypeEnum) UnmarshalJSON(data []byte) error {
-	var s string
-	if err := json.Unmarshal(data, &s); err != nil {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
-	switch s {
+	switch v {
 	case "partner_role":
-		*e = PartnerRoleTypeEnum(s)
+		*e = PartnerRoleTypeEnum(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for PartnerRoleTypeEnum: %s", s)
+		return fmt.Errorf("invalid value for PartnerRoleTypeEnum: %v", v)
 	}
 }
 

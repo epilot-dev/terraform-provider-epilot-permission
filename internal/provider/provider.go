@@ -41,6 +41,7 @@ func (p *EpilotPermissionProvider) Schema(ctx context.Context, req provider.Sche
 			"server_url": schema.StringAttribute{
 				MarkdownDescription: "Server URL (defaults to https://permissions.sls.epilot.io)",
 				Optional:            true,
+				Required:            false,
 			},
 			"epilot_auth": schema.StringAttribute{
 				Optional:  true,

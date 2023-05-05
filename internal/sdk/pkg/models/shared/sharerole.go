@@ -14,17 +14,21 @@ const (
 	ShareRoleTypeEnumShareRole ShareRoleTypeEnum = "share_role"
 )
 
+func (e ShareRoleTypeEnum) ToPointer() *ShareRoleTypeEnum {
+	return &e
+}
+
 func (e *ShareRoleTypeEnum) UnmarshalJSON(data []byte) error {
-	var s string
-	if err := json.Unmarshal(data, &s); err != nil {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
-	switch s {
+	switch v {
 	case "share_role":
-		*e = ShareRoleTypeEnum(s)
+		*e = ShareRoleTypeEnum(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for ShareRoleTypeEnum: %s", s)
+		return fmt.Errorf("invalid value for ShareRoleTypeEnum: %v", v)
 	}
 }
 
