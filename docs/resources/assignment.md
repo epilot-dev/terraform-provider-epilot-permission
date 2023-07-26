@@ -18,10 +18,7 @@ Assignment Resource
 ### Required
 
 - `role_id` (String)
-
-### Optional
-
-- `user_id` (String)
+- `user_id` (String) Id of a user
 
 ### Read-Only
 

@@ -8,27 +8,27 @@ import (
 	"time"
 )
 
-type PartnerRoleTypeEnum string
+type PartnerRoleType string
 
 const (
-	PartnerRoleTypeEnumPartnerRole PartnerRoleTypeEnum = "partner_role"
+	PartnerRoleTypePartnerRole PartnerRoleType = "partner_role"
 )
 
-func (e PartnerRoleTypeEnum) ToPointer() *PartnerRoleTypeEnum {
+func (e PartnerRoleType) ToPointer() *PartnerRoleType {
 	return &e
 }
 
-func (e *PartnerRoleTypeEnum) UnmarshalJSON(data []byte) error {
+func (e *PartnerRoleType) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
 	switch v {
 	case "partner_role":
-		*e = PartnerRoleTypeEnum(v)
+		*e = PartnerRoleType(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for PartnerRoleTypeEnum: %v", v)
+		return fmt.Errorf("invalid value for PartnerRoleType: %v", v)
 	}
 }
 
@@ -46,6 +46,6 @@ type PartnerRole struct {
 	OrganizationID string  `json:"organization_id"`
 	PartnerOrgID   *string `json:"partner_org_id,omitempty"`
 	// URL-friendly name for the role
-	Slug string              `json:"slug"`
-	Type PartnerRoleTypeEnum `json:"type"`
+	Slug string          `json:"slug"`
+	Type PartnerRoleType `json:"type"`
 }

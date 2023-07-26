@@ -7,14 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-func (r *AssignmentResourceModel) ToSDKType() interface{} {
-	// Not Used
-
-	return nil
-
-}
-
-func (r *AssignmentResourceModel) RefreshFromSDKType(resp *shared.Assignment) {
+func (r *AssignmentResourceModel) RefreshFromCreateResponse(resp *shared.Assignment) {
 	r.Roles = nil
 	for _, v := range resp.Roles {
 		r.Roles = append(r.Roles, types.StringValue(v))
@@ -24,5 +17,4 @@ func (r *AssignmentResourceModel) RefreshFromSDKType(resp *shared.Assignment) {
 	} else {
 		r.UserID = types.StringNull()
 	}
-
 }

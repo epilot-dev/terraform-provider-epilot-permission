@@ -37,6 +37,7 @@ func (p *EpilotPermissionProvider) Metadata(ctx context.Context, req provider.Me
 
 func (p *EpilotPermissionProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		Description: `Permissions API: Flexible Role-based Access Control for epilot`,
 		Attributes: map[string]schema.Attribute{
 			"server_url": schema.StringAttribute{
 				MarkdownDescription: "Server URL (defaults to https://permissions.sls.epilot.io)",

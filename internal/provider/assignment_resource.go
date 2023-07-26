@@ -8,12 +8,10 @@ import (
 	"epilot-permission/internal/sdk/pkg/models/operations"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
-
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
@@ -58,11 +56,11 @@ func (r *AssignmentResource) Schema(ctx context.Context, req resource.SchemaRequ
 				ElementType: types.StringType,
 			},
 			"user_id": schema.StringAttribute{
-				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
-				Optional: true,
+				Required:    true,
+				Description: `Id of a user`,
 			},
 		},
 	}
@@ -129,7 +127,7 @@ func (r *AssignmentResource) Create(ctx context.Context, req resource.CreateRequ
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSDKType(res.Assignment)
+	data.RefreshFromCreateResponse(res.Assignment)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -213,5 +211,5 @@ func (r *AssignmentResource) Delete(ctx context.Context, req resource.DeleteRequ
 }
 
 func (r *AssignmentResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+	resp.Diagnostics.AddError("Not Implemented", "No available import state operation is available for resource assignment.")
 }

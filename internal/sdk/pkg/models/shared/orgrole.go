@@ -8,27 +8,27 @@ import (
 	"time"
 )
 
-type OrgRoleTypeEnum string
+type OrgRoleType string
 
 const (
-	OrgRoleTypeEnumOrgRole OrgRoleTypeEnum = "org_role"
+	OrgRoleTypeOrgRole OrgRoleType = "org_role"
 )
 
-func (e OrgRoleTypeEnum) ToPointer() *OrgRoleTypeEnum {
+func (e OrgRoleType) ToPointer() *OrgRoleType {
 	return &e
 }
 
-func (e *OrgRoleTypeEnum) UnmarshalJSON(data []byte) error {
+func (e *OrgRoleType) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
 	switch v {
 	case "org_role":
-		*e = OrgRoleTypeEnum(v)
+		*e = OrgRoleType(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for OrgRoleTypeEnum: %v", v)
+		return fmt.Errorf("invalid value for OrgRoleType: %v", v)
 	}
 }
 
@@ -45,6 +45,6 @@ type OrgRole struct {
 	// Id of an organization
 	OrganizationID string `json:"organization_id"`
 	// URL-friendly name for the role
-	Slug string          `json:"slug"`
-	Type OrgRoleTypeEnum `json:"type"`
+	Slug string      `json:"slug"`
+	Type OrgRoleType `json:"type"`
 }
