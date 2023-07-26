@@ -8,22 +8,22 @@ import (
 	"time"
 )
 
-func (r *RoleResourceModel) ToSDKType() *shared.Role {
+func (r *RoleResourceModel) ToCreateSDKType() *shared.Role {
 	var out shared.Role
 	var userRole *shared.UserRole
-	if r.Role.UserRole != nil {
+	if r.Role.OrgRole != nil {
 		expiresAt := new(time.Time)
-		if !r.Role.UserRole.ExpiresAt.IsUnknown() && !r.Role.UserRole.ExpiresAt.IsNull() {
-			*expiresAt, _ = time.Parse(time.RFC3339Nano, r.Role.UserRole.ExpiresAt.ValueString())
+		if !r.Role.OrgRole.ExpiresAt.IsUnknown() && !r.Role.OrgRole.ExpiresAt.IsNull() {
+			*expiresAt, _ = time.Parse(time.RFC3339Nano, r.Role.OrgRole.ExpiresAt.ValueString())
 		} else {
 			expiresAt = nil
 		}
 		grants := make([]shared.Grant, 0)
-		for _, grantsItem := range r.Role.UserRole.Grants {
+		for _, grantsItem := range r.Role.OrgRole.Grants {
 			action := grantsItem.Action.ValueString()
-			effect := new(shared.GrantEffectEnum)
+			effect := new(shared.GrantEffect)
 			if !grantsItem.Effect.IsUnknown() && !grantsItem.Effect.IsNull() {
-				*effect = shared.GrantEffectEnum(grantsItem.Effect.ValueString())
+				*effect = shared.GrantEffect(grantsItem.Effect.ValueString())
 			} else {
 				effect = nil
 			}
@@ -39,11 +39,11 @@ func (r *RoleResourceModel) ToSDKType() *shared.Role {
 				Resource: resource,
 			})
 		}
-		id := r.Role.UserRole.ID.ValueString()
-		name := r.Role.UserRole.Name.ValueString()
-		organizationID := r.Role.UserRole.OrganizationID.ValueString()
-		slug := r.Role.UserRole.Slug.ValueString()
-		type1 := shared.UserRoleTypeEnum(r.Role.UserRole.Type.ValueString())
+		id := r.Role.OrgRole.ID.ValueString()
+		name := r.Role.OrgRole.Name.ValueString()
+		organizationID := r.Role.OrgRole.OrganizationID.ValueString()
+		slug := r.Role.OrgRole.Slug.ValueString()
+		type1 := shared.UserRoleType(r.Role.OrgRole.Type.ValueString())
 		userRole = &shared.UserRole{
 			ExpiresAt:      expiresAt,
 			Grants:         grants,
@@ -60,19 +60,19 @@ func (r *RoleResourceModel) ToSDKType() *shared.Role {
 		}
 	}
 	var orgRole *shared.OrgRole
-	if r.Role.OrgRole != nil {
+	if r.Role.PartnerRole != nil {
 		expiresAt1 := new(time.Time)
-		if !r.Role.OrgRole.ExpiresAt.IsUnknown() && !r.Role.OrgRole.ExpiresAt.IsNull() {
-			*expiresAt1, _ = time.Parse(time.RFC3339Nano, r.Role.OrgRole.ExpiresAt.ValueString())
+		if !r.Role.PartnerRole.ExpiresAt.IsUnknown() && !r.Role.PartnerRole.ExpiresAt.IsNull() {
+			*expiresAt1, _ = time.Parse(time.RFC3339Nano, r.Role.PartnerRole.ExpiresAt.ValueString())
 		} else {
 			expiresAt1 = nil
 		}
 		grants1 := make([]shared.Grant, 0)
-		for _, grantsItem1 := range r.Role.OrgRole.Grants {
+		for _, grantsItem1 := range r.Role.PartnerRole.Grants {
 			action1 := grantsItem1.Action.ValueString()
-			effect1 := new(shared.GrantEffectEnum)
+			effect1 := new(shared.GrantEffect)
 			if !grantsItem1.Effect.IsUnknown() && !grantsItem1.Effect.IsNull() {
-				*effect1 = shared.GrantEffectEnum(grantsItem1.Effect.ValueString())
+				*effect1 = shared.GrantEffect(grantsItem1.Effect.ValueString())
 			} else {
 				effect1 = nil
 			}
@@ -88,11 +88,11 @@ func (r *RoleResourceModel) ToSDKType() *shared.Role {
 				Resource: resource1,
 			})
 		}
-		id1 := r.Role.OrgRole.ID.ValueString()
-		name1 := r.Role.OrgRole.Name.ValueString()
-		organizationId1 := r.Role.OrgRole.OrganizationID.ValueString()
-		slug1 := r.Role.OrgRole.Slug.ValueString()
-		type2 := shared.OrgRoleTypeEnum(r.Role.OrgRole.Type.ValueString())
+		id1 := r.Role.PartnerRole.ID.ValueString()
+		name1 := r.Role.PartnerRole.Name.ValueString()
+		organizationId1 := r.Role.PartnerRole.OrganizationID.ValueString()
+		slug1 := r.Role.PartnerRole.Slug.ValueString()
+		type2 := shared.OrgRoleType(r.Role.PartnerRole.Type.ValueString())
 		orgRole = &shared.OrgRole{
 			ExpiresAt:      expiresAt1,
 			Grants:         grants1,
@@ -119,9 +119,9 @@ func (r *RoleResourceModel) ToSDKType() *shared.Role {
 		grants2 := make([]shared.Grant, 0)
 		for _, grantsItem2 := range r.Role.ShareRole.Grants {
 			action2 := grantsItem2.Action.ValueString()
-			effect2 := new(shared.GrantEffectEnum)
+			effect2 := new(shared.GrantEffect)
 			if !grantsItem2.Effect.IsUnknown() && !grantsItem2.Effect.IsNull() {
-				*effect2 = shared.GrantEffectEnum(grantsItem2.Effect.ValueString())
+				*effect2 = shared.GrantEffect(grantsItem2.Effect.ValueString())
 			} else {
 				effect2 = nil
 			}
@@ -141,7 +141,7 @@ func (r *RoleResourceModel) ToSDKType() *shared.Role {
 		name2 := r.Role.ShareRole.Name.ValueString()
 		organizationId2 := r.Role.ShareRole.OrganizationID.ValueString()
 		slug2 := r.Role.ShareRole.Slug.ValueString()
-		type3 := shared.ShareRoleTypeEnum(r.Role.ShareRole.Type.ValueString())
+		type3 := shared.ShareRoleType(r.Role.ShareRole.Type.ValueString())
 		shareRole = &shared.ShareRole{
 			ExpiresAt:      expiresAt2,
 			Grants:         grants2,
@@ -158,19 +158,19 @@ func (r *RoleResourceModel) ToSDKType() *shared.Role {
 		}
 	}
 	var partnerRole *shared.PartnerRole
-	if r.Role.PartnerRole != nil {
+	if r.Role.UserRole != nil {
 		expiresAt3 := new(time.Time)
-		if !r.Role.PartnerRole.ExpiresAt.IsUnknown() && !r.Role.PartnerRole.ExpiresAt.IsNull() {
-			*expiresAt3, _ = time.Parse(time.RFC3339Nano, r.Role.PartnerRole.ExpiresAt.ValueString())
+		if !r.Role.UserRole.ExpiresAt.IsUnknown() && !r.Role.UserRole.ExpiresAt.IsNull() {
+			*expiresAt3, _ = time.Parse(time.RFC3339Nano, r.Role.UserRole.ExpiresAt.ValueString())
 		} else {
 			expiresAt3 = nil
 		}
 		grants3 := make([]shared.Grant, 0)
-		for _, grantsItem3 := range r.Role.PartnerRole.Grants {
+		for _, grantsItem3 := range r.Role.UserRole.Grants {
 			action3 := grantsItem3.Action.ValueString()
-			effect3 := new(shared.GrantEffectEnum)
+			effect3 := new(shared.GrantEffect)
 			if !grantsItem3.Effect.IsUnknown() && !grantsItem3.Effect.IsNull() {
-				*effect3 = shared.GrantEffectEnum(grantsItem3.Effect.ValueString())
+				*effect3 = shared.GrantEffect(grantsItem3.Effect.ValueString())
 			} else {
 				effect3 = nil
 			}
@@ -186,24 +186,17 @@ func (r *RoleResourceModel) ToSDKType() *shared.Role {
 				Resource: resource3,
 			})
 		}
-		id3 := r.Role.PartnerRole.ID.ValueString()
-		name3 := r.Role.PartnerRole.Name.ValueString()
-		organizationId3 := r.Role.PartnerRole.OrganizationID.ValueString()
-		partnerOrgID := new(string)
-		if !r.Role.PartnerRole.PartnerOrgID.IsUnknown() && !r.Role.PartnerRole.PartnerOrgID.IsNull() {
-			*partnerOrgID = r.Role.PartnerRole.PartnerOrgID.ValueString()
-		} else {
-			partnerOrgID = nil
-		}
-		slug3 := r.Role.PartnerRole.Slug.ValueString()
-		type4 := shared.PartnerRoleTypeEnum(r.Role.PartnerRole.Type.ValueString())
+		id3 := r.Role.UserRole.ID.ValueString()
+		name3 := r.Role.UserRole.Name.ValueString()
+		organizationId3 := r.Role.UserRole.OrganizationID.ValueString()
+		slug3 := r.Role.UserRole.Slug.ValueString()
+		type4 := shared.PartnerRoleType(r.Role.UserRole.Type.ValueString())
 		partnerRole = &shared.PartnerRole{
 			ExpiresAt:      expiresAt3,
 			Grants:         grants3,
 			ID:             id3,
 			Name:           name3,
 			OrganizationID: organizationId3,
-			PartnerOrgID:   partnerOrgID,
 			Slug:           slug3,
 			Type:           type4,
 		}
@@ -214,20 +207,34 @@ func (r *RoleResourceModel) ToSDKType() *shared.Role {
 		}
 	}
 	return &out
-
 }
 
-func (r *RoleResourceModel) RefreshFromSDKType(resp *shared.Role) {
+func (r *RoleResourceModel) ToGetSDKType() *shared.Role {
+	out := r.ToCreateSDKType()
+	return out
+}
+
+func (r *RoleResourceModel) ToUpdateSDKType() *shared.Role {
+	out := r.ToCreateSDKType()
+	return out
+}
+
+func (r *RoleResourceModel) ToDeleteSDKType() *shared.Role {
+	out := r.ToCreateSDKType()
+	return out
+}
+
+func (r *RoleResourceModel) RefreshFromGetResponse(resp *shared.Role) {
 	// Unwrap
-	if resp.UserRole != nil {
-		r.Role.UserRole = &UserRole{}
-		if resp.UserRole.ExpiresAt != nil {
-			r.Role.UserRole.ExpiresAt = types.StringValue(resp.UserRole.ExpiresAt.Format(time.RFC3339))
+	if resp.OrgRole != nil {
+		r.Role.OrgRole = &OrgRole{}
+		if resp.OrgRole.ExpiresAt != nil {
+			r.Role.OrgRole.ExpiresAt = types.StringValue(resp.OrgRole.ExpiresAt.Format(time.RFC3339))
 		} else {
-			r.Role.UserRole.ExpiresAt = types.StringNull()
+			r.Role.OrgRole.ExpiresAt = types.StringNull()
 		}
-		r.Role.UserRole.Grants = nil
-		for _, grantsItem := range resp.UserRole.Grants {
+		r.Role.OrgRole.Grants = nil
+		for _, grantsItem := range resp.OrgRole.Grants {
 			var grants1 Grant
 			grants1.Action = types.StringValue(grantsItem.Action)
 			if grantsItem.Effect != nil {
@@ -240,23 +247,23 @@ func (r *RoleResourceModel) RefreshFromSDKType(resp *shared.Role) {
 			} else {
 				grants1.Resource = types.StringNull()
 			}
-			r.Role.UserRole.Grants = append(r.Role.UserRole.Grants, grants1)
+			r.Role.OrgRole.Grants = append(r.Role.OrgRole.Grants, grants1)
 		}
-		r.Role.UserRole.ID = types.StringValue(resp.UserRole.ID)
-		r.Role.UserRole.Name = types.StringValue(resp.UserRole.Name)
-		r.Role.UserRole.OrganizationID = types.StringValue(resp.UserRole.OrganizationID)
-		r.Role.UserRole.Slug = types.StringValue(resp.UserRole.Slug)
-		r.Role.UserRole.Type = types.StringValue(string(resp.UserRole.Type))
+		r.Role.OrgRole.ID = types.StringValue(resp.OrgRole.ID)
+		r.Role.OrgRole.Name = types.StringValue(resp.OrgRole.Name)
+		r.Role.OrgRole.OrganizationID = types.StringValue(resp.OrgRole.OrganizationID)
+		r.Role.OrgRole.Slug = types.StringValue(resp.OrgRole.Slug)
+		r.Role.OrgRole.Type = types.StringValue(string(resp.OrgRole.Type))
 	}
-	if resp.OrgRole != nil {
-		r.Role.OrgRole = &OrgRole{}
-		if resp.OrgRole.ExpiresAt != nil {
-			r.Role.OrgRole.ExpiresAt = types.StringValue(resp.OrgRole.ExpiresAt.Format(time.RFC3339))
+	if resp.PartnerRole != nil {
+		r.Role.PartnerRole = &PartnerRole{}
+		if resp.PartnerRole.ExpiresAt != nil {
+			r.Role.PartnerRole.ExpiresAt = types.StringValue(resp.PartnerRole.ExpiresAt.Format(time.RFC3339))
 		} else {
-			r.Role.OrgRole.ExpiresAt = types.StringNull()
+			r.Role.PartnerRole.ExpiresAt = types.StringNull()
 		}
-		r.Role.OrgRole.Grants = nil
-		for _, grantsItem1 := range resp.OrgRole.Grants {
+		r.Role.PartnerRole.Grants = nil
+		for _, grantsItem1 := range resp.PartnerRole.Grants {
 			var grants3 Grant
 			grants3.Action = types.StringValue(grantsItem1.Action)
 			if grantsItem1.Effect != nil {
@@ -269,13 +276,18 @@ func (r *RoleResourceModel) RefreshFromSDKType(resp *shared.Role) {
 			} else {
 				grants3.Resource = types.StringNull()
 			}
-			r.Role.OrgRole.Grants = append(r.Role.OrgRole.Grants, grants3)
+			r.Role.PartnerRole.Grants = append(r.Role.PartnerRole.Grants, grants3)
 		}
-		r.Role.OrgRole.ID = types.StringValue(resp.OrgRole.ID)
-		r.Role.OrgRole.Name = types.StringValue(resp.OrgRole.Name)
-		r.Role.OrgRole.OrganizationID = types.StringValue(resp.OrgRole.OrganizationID)
-		r.Role.OrgRole.Slug = types.StringValue(resp.OrgRole.Slug)
-		r.Role.OrgRole.Type = types.StringValue(string(resp.OrgRole.Type))
+		r.Role.PartnerRole.ID = types.StringValue(resp.PartnerRole.ID)
+		r.Role.PartnerRole.Name = types.StringValue(resp.PartnerRole.Name)
+		r.Role.PartnerRole.OrganizationID = types.StringValue(resp.PartnerRole.OrganizationID)
+		if resp.PartnerRole.PartnerOrgID != nil {
+			r.Role.PartnerRole.PartnerOrgID = types.StringValue(*resp.PartnerRole.PartnerOrgID)
+		} else {
+			r.Role.PartnerRole.PartnerOrgID = types.StringNull()
+		}
+		r.Role.PartnerRole.Slug = types.StringValue(resp.PartnerRole.Slug)
+		r.Role.PartnerRole.Type = types.StringValue(string(resp.PartnerRole.Type))
 	}
 	if resp.ShareRole != nil {
 		r.Role.ShareRole = &ShareRole{}
@@ -306,15 +318,15 @@ func (r *RoleResourceModel) RefreshFromSDKType(resp *shared.Role) {
 		r.Role.ShareRole.Slug = types.StringValue(resp.ShareRole.Slug)
 		r.Role.ShareRole.Type = types.StringValue(string(resp.ShareRole.Type))
 	}
-	if resp.PartnerRole != nil {
-		r.Role.PartnerRole = &PartnerRole{}
-		if resp.PartnerRole.ExpiresAt != nil {
-			r.Role.PartnerRole.ExpiresAt = types.StringValue(resp.PartnerRole.ExpiresAt.Format(time.RFC3339))
+	if resp.UserRole != nil {
+		r.Role.UserRole = &UserRole{}
+		if resp.UserRole.ExpiresAt != nil {
+			r.Role.UserRole.ExpiresAt = types.StringValue(resp.UserRole.ExpiresAt.Format(time.RFC3339))
 		} else {
-			r.Role.PartnerRole.ExpiresAt = types.StringNull()
+			r.Role.UserRole.ExpiresAt = types.StringNull()
 		}
-		r.Role.PartnerRole.Grants = nil
-		for _, grantsItem3 := range resp.PartnerRole.Grants {
+		r.Role.UserRole.Grants = nil
+		for _, grantsItem3 := range resp.UserRole.Grants {
 			var grants7 Grant
 			grants7.Action = types.StringValue(grantsItem3.Action)
 			if grantsItem3.Effect != nil {
@@ -327,23 +339,22 @@ func (r *RoleResourceModel) RefreshFromSDKType(resp *shared.Role) {
 			} else {
 				grants7.Resource = types.StringNull()
 			}
-			r.Role.PartnerRole.Grants = append(r.Role.PartnerRole.Grants, grants7)
+			r.Role.UserRole.Grants = append(r.Role.UserRole.Grants, grants7)
 		}
-		r.Role.PartnerRole.ID = types.StringValue(resp.PartnerRole.ID)
-		r.Role.PartnerRole.Name = types.StringValue(resp.PartnerRole.Name)
-		r.Role.PartnerRole.OrganizationID = types.StringValue(resp.PartnerRole.OrganizationID)
-		if resp.PartnerRole.PartnerOrgID != nil {
-			r.Role.PartnerRole.PartnerOrgID = types.StringValue(*resp.PartnerRole.PartnerOrgID)
-		} else {
-			r.Role.PartnerRole.PartnerOrgID = types.StringNull()
-		}
-		r.Role.PartnerRole.Slug = types.StringValue(resp.PartnerRole.Slug)
-		r.Role.PartnerRole.Type = types.StringValue(string(resp.PartnerRole.Type))
+		r.Role.UserRole.ID = types.StringValue(resp.UserRole.ID)
+		r.Role.UserRole.Name = types.StringValue(resp.UserRole.Name)
+		r.Role.UserRole.OrganizationID = types.StringValue(resp.UserRole.OrganizationID)
+		r.Role.UserRole.Slug = types.StringValue(resp.UserRole.Slug)
+		r.Role.UserRole.Type = types.StringValue(string(resp.UserRole.Type))
 	}
 	// Unwrap done. Flattening in
-	r.ID = types.StringValue(reflectJSONKey(resp, "id").String())
-	r.Name = types.StringValue(reflectJSONKey(resp, "name").String())
-	r.OrganizationID = types.StringValue(reflectJSONKey(resp, "organization_id").String())
-	r.Slug = types.StringValue(reflectJSONKey(resp, "slug").String())
+	r.RoleID = types.StringValue(reflectJSONKey(resp, "id").String())
+}
 
+func (r *RoleResourceModel) RefreshFromCreateResponse(resp *shared.Role) {
+	r.RefreshFromGetResponse(resp)
+}
+
+func (r *RoleResourceModel) RefreshFromUpdateResponse(resp *shared.Role) {
+	r.RefreshFromGetResponse(resp)
 }

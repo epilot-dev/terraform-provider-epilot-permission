@@ -7,18 +7,18 @@ import (
 	"fmt"
 )
 
-type GrantEffectEnum string
+type GrantEffect string
 
 const (
-	GrantEffectEnumAllow GrantEffectEnum = "allow"
-	GrantEffectEnumDeny  GrantEffectEnum = "deny"
+	GrantEffectAllow GrantEffect = "allow"
+	GrantEffectDeny  GrantEffect = "deny"
 )
 
-func (e GrantEffectEnum) ToPointer() *GrantEffectEnum {
+func (e GrantEffect) ToPointer() *GrantEffect {
 	return &e
 }
 
-func (e *GrantEffectEnum) UnmarshalJSON(data []byte) error {
+func (e *GrantEffect) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -27,15 +27,15 @@ func (e *GrantEffectEnum) UnmarshalJSON(data []byte) error {
 	case "allow":
 		fallthrough
 	case "deny":
-		*e = GrantEffectEnum(v)
+		*e = GrantEffect(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for GrantEffectEnum: %v", v)
+		return fmt.Errorf("invalid value for GrantEffect: %v", v)
 	}
 }
 
 type Grant struct {
-	Action   string           `json:"action"`
-	Effect   *GrantEffectEnum `json:"effect,omitempty"`
-	Resource *string          `json:"resource,omitempty"`
+	Action   string       `json:"action"`
+	Effect   *GrantEffect `json:"effect,omitempty"`
+	Resource *string      `json:"resource,omitempty"`
 }

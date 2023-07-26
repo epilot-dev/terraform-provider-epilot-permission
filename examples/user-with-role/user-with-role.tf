@@ -16,6 +16,7 @@ variable "epilot_api_key" {
 }
 
 resource "epilot-permission_role" "new_admin" {
+  role_id = "15218142:file_admin_test"
   role = {
     user_role = {
       name            = "File Admin_test 2.."

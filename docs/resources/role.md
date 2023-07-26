@@ -17,15 +17,11 @@ Role Resource
 
 ### Required
 
+- `role_id` (String)
+
+### Optional
+
 - `role` (Attributes) (see [below for nested schema](#nestedatt--role))
-
-### Read-Only
-
-- `grants` (Attributes List) (see [below for nested schema](#nestedatt--grants))
-- `id` (String) The ID of this resource.
-- `name` (String)
-- `organization_id` (String)
-- `slug` (String)
 
 <a id="nestedatt--role"></a>
 ### Nested Schema for `role`
@@ -42,16 +38,16 @@ Optional:
 
 Required:
 
-- `grants` (Attributes List) (see [below for nested schema](#nestedatt--role--org_role--grants))
-- `id` (String)
-- `name` (String)
-- `organization_id` (String)
-- `slug` (String)
-- `type` (String)
+- `grants` (Attributes List) List of grants (permissions) applied to the role (see [below for nested schema](#nestedatt--role--org_role--grants))
+- `id` (String) Format: <organization_id>:<slug>
+- `name` (String) Human-friendly name for the role
+- `organization_id` (String) Id of an organization
+- `slug` (String) URL-friendly name for the role
+- `type` (String) must be one of [org_role]
 
 Optional:
 
-- `expires_at` (String)
+- `expires_at` (String) date and time then the role will expire
 
 <a id="nestedatt--role--org_role--grants"></a>
 ### Nested Schema for `role.org_role.grants`
@@ -62,7 +58,7 @@ Required:
 
 Optional:
 
-- `effect` (String)
+- `effect` (String) must be one of [allow, deny]
 - `resource` (String)
 
 
@@ -72,16 +68,16 @@ Optional:
 
 Required:
 
-- `grants` (Attributes List) (see [below for nested schema](#nestedatt--role--partner_role--grants))
-- `id` (String)
-- `name` (String)
-- `organization_id` (String)
-- `slug` (String)
-- `type` (String)
+- `grants` (Attributes List) List of grants (permissions) applied to the role (see [below for nested schema](#nestedatt--role--partner_role--grants))
+- `id` (String) Format: <organization_id>:<slug>
+- `name` (String) Human-friendly name for the role
+- `organization_id` (String) Id of an organization
+- `slug` (String) URL-friendly name for the role
+- `type` (String) must be one of [partner_role]
 
 Optional:
 
-- `expires_at` (String)
+- `expires_at` (String) date and time then the role will expire
 - `partner_org_id` (String)
 
 <a id="nestedatt--role--partner_role--grants"></a>
@@ -93,7 +89,7 @@ Required:
 
 Optional:
 
-- `effect` (String)
+- `effect` (String) must be one of [allow, deny]
 - `resource` (String)
 
 
@@ -103,16 +99,16 @@ Optional:
 
 Required:
 
-- `grants` (Attributes List) (see [below for nested schema](#nestedatt--role--share_role--grants))
-- `id` (String)
-- `name` (String)
-- `organization_id` (String)
-- `slug` (String)
-- `type` (String)
+- `grants` (Attributes List) List of grants (permissions) applied to the role (see [below for nested schema](#nestedatt--role--share_role--grants))
+- `id` (String) Format: <organization_id>:<slug>
+- `name` (String) Human-friendly name for the role
+- `organization_id` (String) Id of an organization
+- `slug` (String) URL-friendly name for the role
+- `type` (String) must be one of [share_role]
 
 Optional:
 
-- `expires_at` (String)
+- `expires_at` (String) date and time then the role will expire
 
 <a id="nestedatt--role--share_role--grants"></a>
 ### Nested Schema for `role.share_role.grants`
@@ -123,7 +119,7 @@ Required:
 
 Optional:
 
-- `effect` (String)
+- `effect` (String) must be one of [allow, deny]
 - `resource` (String)
 
 
@@ -133,16 +129,16 @@ Optional:
 
 Required:
 
-- `grants` (Attributes List) (see [below for nested schema](#nestedatt--role--user_role--grants))
-- `id` (String)
-- `name` (String)
-- `organization_id` (String)
-- `slug` (String)
-- `type` (String)
+- `grants` (Attributes List) List of grants (permissions) applied to the role (see [below for nested schema](#nestedatt--role--user_role--grants))
+- `id` (String) Format: <organization_id>:<slug>
+- `name` (String) Human-friendly name for the role
+- `organization_id` (String) Id of an organization
+- `slug` (String) URL-friendly name for the role
+- `type` (String) must be one of [user_role]
 
 Optional:
 
-- `expires_at` (String)
+- `expires_at` (String) date and time then the role will expire
 
 <a id="nestedatt--role--user_role--grants"></a>
 ### Nested Schema for `role.user_role.grants`
@@ -153,22 +149,7 @@ Required:
 
 Optional:
 
-- `effect` (String)
-- `resource` (String)
-
-
-
-
-<a id="nestedatt--grants"></a>
-### Nested Schema for `grants`
-
-Required:
-
-- `action` (String)
-
-Optional:
-
-- `effect` (String)
+- `effect` (String) must be one of [allow, deny]
 - `resource` (String)
 
 

@@ -3,8 +3,8 @@
 package provider
 
 type Role struct {
-	UserRole    *UserRole    `tfsdk:"user_role"`
 	OrgRole     *OrgRole     `tfsdk:"org_role"`
-	ShareRole   *ShareRole   `tfsdk:"share_role"`
 	PartnerRole *PartnerRole `tfsdk:"partner_role"`
+	ShareRole   *ShareRole   `tfsdk:"share_role"`
+	UserRole    *UserRole    `tfsdk:"user_role"`
 }

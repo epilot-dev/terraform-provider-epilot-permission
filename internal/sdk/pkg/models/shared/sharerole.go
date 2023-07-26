@@ -8,27 +8,27 @@ import (
 	"time"
 )
 
-type ShareRoleTypeEnum string
+type ShareRoleType string
 
 const (
-	ShareRoleTypeEnumShareRole ShareRoleTypeEnum = "share_role"
+	ShareRoleTypeShareRole ShareRoleType = "share_role"
 )
 
-func (e ShareRoleTypeEnum) ToPointer() *ShareRoleTypeEnum {
+func (e ShareRoleType) ToPointer() *ShareRoleType {
 	return &e
 }
 
-func (e *ShareRoleTypeEnum) UnmarshalJSON(data []byte) error {
+func (e *ShareRoleType) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
 	switch v {
 	case "share_role":
-		*e = ShareRoleTypeEnum(v)
+		*e = ShareRoleType(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for ShareRoleTypeEnum: %v", v)
+		return fmt.Errorf("invalid value for ShareRoleType: %v", v)
 	}
 }
 
@@ -45,6 +45,6 @@ type ShareRole struct {
 	// Id of an organization
 	OrganizationID string `json:"organization_id"`
 	// URL-friendly name for the role
-	Slug string            `json:"slug"`
-	Type ShareRoleTypeEnum `json:"type"`
+	Slug string        `json:"slug"`
+	Type ShareRoleType `json:"type"`
 }

@@ -10,11 +10,12 @@ import (
 
 	"epilot-permission/internal/validators"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
@@ -34,12 +35,8 @@ type RoleResource struct {
 
 // RoleResourceModel describes the resource data model.
 type RoleResourceModel struct {
-	Grants         []Grant      `tfsdk:"grants"`
-	ID             types.String `tfsdk:"id"`
-	Name           types.String `tfsdk:"name"`
-	OrganizationID types.String `tfsdk:"organization_id"`
-	Role           Role         `tfsdk:"role"`
-	Slug           types.String `tfsdk:"slug"`
+	Role   *Role        `tfsdk:"role"`
+	RoleID types.String `tfsdk:"role_id"`
 }
 
 func (r *RoleResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -51,110 +48,18 @@ func (r *RoleResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 		MarkdownDescription: "Role Resource",
 
 		Attributes: map[string]schema.Attribute{
-			"grants": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"action": schema.StringAttribute{
-							Required: true,
-						},
-						"effect": schema.StringAttribute{
-							Computed: true,
-							Optional: true,
-							Validators: []validator.String{
-								stringvalidator.OneOf(
-									"allow",
-									"deny",
-								),
-							},
-						},
-						"resource": schema.StringAttribute{
-							Computed: true,
-							Optional: true,
-						},
-					},
-				},
-			},
-			"id": schema.StringAttribute{
-				Computed: true,
-			},
-			"name": schema.StringAttribute{
-				Computed: true,
-			},
-			"organization_id": schema.StringAttribute{
-				Computed: true,
-			},
 			"role": schema.SingleNestedAttribute{
-				Required: true,
+				Optional: true,
 				Attributes: map[string]schema.Attribute{
-					"user_role": schema.SingleNestedAttribute{
-						Computed: true,
-						Optional: true,
-						Attributes: map[string]schema.Attribute{
-							"expires_at": schema.StringAttribute{
-								Computed: true,
-								Optional: true,
-								Validators: []validator.String{
-									validators.IsRFC3339(),
-								},
-							},
-							"grants": schema.ListNestedAttribute{
-								Required: true,
-								NestedObject: schema.NestedAttributeObject{
-									Attributes: map[string]schema.Attribute{
-										"action": schema.StringAttribute{
-											Required: true,
-										},
-										"effect": schema.StringAttribute{
-											Computed: true,
-											Optional: true,
-											Validators: []validator.String{
-												stringvalidator.OneOf(
-													"allow",
-													"deny",
-												),
-											},
-										},
-										"resource": schema.StringAttribute{
-											Computed: true,
-											Optional: true,
-										},
-									},
-								},
-							},
-							"id": schema.StringAttribute{
-								Required: true,
-							},
-							"name": schema.StringAttribute{
-								Required: true,
-							},
-							"organization_id": schema.StringAttribute{
-								Required: true,
-							},
-							"slug": schema.StringAttribute{
-								Required: true,
-							},
-							"type": schema.StringAttribute{
-								Required: true,
-								Validators: []validator.String{
-									stringvalidator.OneOf(
-										"user_role",
-									),
-								},
-							},
-						},
-						Description: `A standard user role. Must be explicitly assigned to users.`,
-					},
 					"org_role": schema.SingleNestedAttribute{
-						Computed: true,
 						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"expires_at": schema.StringAttribute{
-								Computed: true,
 								Optional: true,
 								Validators: []validator.String{
 									validators.IsRFC3339(),
 								},
+								Description: `date and time then the role will expire`,
 							},
 							"grants": schema.ListNestedAttribute{
 								Required: true,
@@ -164,7 +69,6 @@ func (r *RoleResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 											Required: true,
 										},
 										"effect": schema.StringAttribute{
-											Computed: true,
 											Optional: true,
 											Validators: []validator.String{
 												stringvalidator.OneOf(
@@ -172,25 +76,30 @@ func (r *RoleResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 													"deny",
 												),
 											},
+											Description: `must be one of [allow, deny]`,
 										},
 										"resource": schema.StringAttribute{
-											Computed: true,
 											Optional: true,
 										},
 									},
 								},
+								Description: `List of grants (permissions) applied to the role`,
 							},
 							"id": schema.StringAttribute{
-								Required: true,
+								Required:    true,
+								Description: `Format: <organization_id>:<slug>`,
 							},
 							"name": schema.StringAttribute{
-								Required: true,
+								Required:    true,
+								Description: `Human-friendly name for the role`,
 							},
 							"organization_id": schema.StringAttribute{
-								Required: true,
+								Required:    true,
+								Description: `Id of an organization`,
 							},
 							"slug": schema.StringAttribute{
-								Required: true,
+								Required:    true,
+								Description: `URL-friendly name for the role`,
 							},
 							"type": schema.StringAttribute{
 								Required: true,
@@ -199,78 +108,20 @@ func (r *RoleResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 										"org_role",
 									),
 								},
+								Description: `must be one of [org_role]`,
 							},
 						},
 						Description: `A role automatically applied to all users in an organization.`,
 					},
-					"share_role": schema.SingleNestedAttribute{
-						Computed: true,
-						Optional: true,
-						Attributes: map[string]schema.Attribute{
-							"expires_at": schema.StringAttribute{
-								Computed: true,
-								Optional: true,
-								Validators: []validator.String{
-									validators.IsRFC3339(),
-								},
-							},
-							"grants": schema.ListNestedAttribute{
-								Required: true,
-								NestedObject: schema.NestedAttributeObject{
-									Attributes: map[string]schema.Attribute{
-										"action": schema.StringAttribute{
-											Required: true,
-										},
-										"effect": schema.StringAttribute{
-											Computed: true,
-											Optional: true,
-											Validators: []validator.String{
-												stringvalidator.OneOf(
-													"allow",
-													"deny",
-												),
-											},
-										},
-										"resource": schema.StringAttribute{
-											Computed: true,
-											Optional: true,
-										},
-									},
-								},
-							},
-							"id": schema.StringAttribute{
-								Required: true,
-							},
-							"name": schema.StringAttribute{
-								Required: true,
-							},
-							"organization_id": schema.StringAttribute{
-								Required: true,
-							},
-							"slug": schema.StringAttribute{
-								Required: true,
-							},
-							"type": schema.StringAttribute{
-								Required: true,
-								Validators: []validator.String{
-									stringvalidator.OneOf(
-										"share_role",
-									),
-								},
-							},
-						},
-						Description: `A role that can be assigned to users in other organizations for sharing purposes.`,
-					},
 					"partner_role": schema.SingleNestedAttribute{
-						Computed: true,
 						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"expires_at": schema.StringAttribute{
-								Computed: true,
 								Optional: true,
 								Validators: []validator.String{
 									validators.IsRFC3339(),
 								},
+								Description: `date and time then the role will expire`,
 							},
 							"grants": schema.ListNestedAttribute{
 								Required: true,
@@ -280,7 +131,6 @@ func (r *RoleResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 											Required: true,
 										},
 										"effect": schema.StringAttribute{
-											Computed: true,
 											Optional: true,
 											Validators: []validator.String{
 												stringvalidator.OneOf(
@@ -288,29 +138,33 @@ func (r *RoleResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 													"deny",
 												),
 											},
+											Description: `must be one of [allow, deny]`,
 										},
 										"resource": schema.StringAttribute{
-											Computed: true,
 											Optional: true,
 										},
 									},
 								},
+								Description: `List of grants (permissions) applied to the role`,
 							},
 							"id": schema.StringAttribute{
-								Required: true,
+								Required:    true,
+								Description: `Format: <organization_id>:<slug>`,
 							},
 							"name": schema.StringAttribute{
-								Required: true,
+								Required:    true,
+								Description: `Human-friendly name for the role`,
 							},
 							"organization_id": schema.StringAttribute{
-								Required: true,
+								Required:    true,
+								Description: `Id of an organization`,
 							},
 							"partner_org_id": schema.StringAttribute{
-								Computed: true,
 								Optional: true,
 							},
 							"slug": schema.StringAttribute{
-								Required: true,
+								Required:    true,
+								Description: `URL-friendly name for the role`,
 							},
 							"type": schema.StringAttribute{
 								Required: true,
@@ -319,17 +173,145 @@ func (r *RoleResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 										"partner_role",
 									),
 								},
+								Description: `must be one of [partner_role]`,
 							},
 						},
 						Description: `A role that appears in another organization's role list that can be assigned but not modified by the partner organization.`,
+					},
+					"share_role": schema.SingleNestedAttribute{
+						Optional: true,
+						Attributes: map[string]schema.Attribute{
+							"expires_at": schema.StringAttribute{
+								Optional: true,
+								Validators: []validator.String{
+									validators.IsRFC3339(),
+								},
+								Description: `date and time then the role will expire`,
+							},
+							"grants": schema.ListNestedAttribute{
+								Required: true,
+								NestedObject: schema.NestedAttributeObject{
+									Attributes: map[string]schema.Attribute{
+										"action": schema.StringAttribute{
+											Required: true,
+										},
+										"effect": schema.StringAttribute{
+											Optional: true,
+											Validators: []validator.String{
+												stringvalidator.OneOf(
+													"allow",
+													"deny",
+												),
+											},
+											Description: `must be one of [allow, deny]`,
+										},
+										"resource": schema.StringAttribute{
+											Optional: true,
+										},
+									},
+								},
+								Description: `List of grants (permissions) applied to the role`,
+							},
+							"id": schema.StringAttribute{
+								Required:    true,
+								Description: `Format: <organization_id>:<slug>`,
+							},
+							"name": schema.StringAttribute{
+								Required:    true,
+								Description: `Human-friendly name for the role`,
+							},
+							"organization_id": schema.StringAttribute{
+								Required:    true,
+								Description: `Id of an organization`,
+							},
+							"slug": schema.StringAttribute{
+								Required:    true,
+								Description: `URL-friendly name for the role`,
+							},
+							"type": schema.StringAttribute{
+								Required: true,
+								Validators: []validator.String{
+									stringvalidator.OneOf(
+										"share_role",
+									),
+								},
+								Description: `must be one of [share_role]`,
+							},
+						},
+						Description: `A role that can be assigned to users in other organizations for sharing purposes.`,
+					},
+					"user_role": schema.SingleNestedAttribute{
+						Optional: true,
+						Attributes: map[string]schema.Attribute{
+							"expires_at": schema.StringAttribute{
+								Optional: true,
+								Validators: []validator.String{
+									validators.IsRFC3339(),
+								},
+								Description: `date and time then the role will expire`,
+							},
+							"grants": schema.ListNestedAttribute{
+								Required: true,
+								NestedObject: schema.NestedAttributeObject{
+									Attributes: map[string]schema.Attribute{
+										"action": schema.StringAttribute{
+											Required: true,
+										},
+										"effect": schema.StringAttribute{
+											Optional: true,
+											Validators: []validator.String{
+												stringvalidator.OneOf(
+													"allow",
+													"deny",
+												),
+											},
+											Description: `must be one of [allow, deny]`,
+										},
+										"resource": schema.StringAttribute{
+											Optional: true,
+										},
+									},
+								},
+								Description: `List of grants (permissions) applied to the role`,
+							},
+							"id": schema.StringAttribute{
+								Required:    true,
+								Description: `Format: <organization_id>:<slug>`,
+							},
+							"name": schema.StringAttribute{
+								Required:    true,
+								Description: `Human-friendly name for the role`,
+							},
+							"organization_id": schema.StringAttribute{
+								Required:    true,
+								Description: `Id of an organization`,
+							},
+							"slug": schema.StringAttribute{
+								Required:    true,
+								Description: `URL-friendly name for the role`,
+							},
+							"type": schema.StringAttribute{
+								Required: true,
+								Validators: []validator.String{
+									stringvalidator.OneOf(
+										"user_role",
+									),
+								},
+								Description: `must be one of [user_role]`,
+							},
+						},
+						Description: `A standard user role. Must be explicitly assigned to users.`,
 					},
 				},
 				Validators: []validator.Object{
 					validators.ExactlyOneChild(),
 				},
 			},
-			"slug": schema.StringAttribute{
-				Computed: true,
+			"role_id": schema.StringAttribute{
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+				Required: true,
 			},
 		},
 	}
@@ -373,7 +355,7 @@ func (r *RoleResource) Create(ctx context.Context, req resource.CreateRequest, r
 		return
 	}
 
-	role := data.ToSDKType()
+	role := data.ToCreateSDKType()
 	role1 := role
 	roleID := reflectJSONKey(role, "id").String()
 	request := operations.PutRoleRequest{
@@ -393,11 +375,7 @@ func (r *RoleResource) Create(ctx context.Context, req resource.CreateRequest, r
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.Role == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
-		return
-	}
-	data.RefreshFromSDKType(res.Role)
+	data.RefreshFromCreateResponse(res.Role)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -421,7 +399,7 @@ func (r *RoleResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 		return
 	}
 
-	role := data.ToSDKType()
+	role := data.ToGetSDKType()
 	roleID := reflectJSONKey(role, "id").String()
 	request := operations.GetRoleRequest{
 		RoleID: roleID,
@@ -439,11 +417,7 @@ func (r *RoleResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.Role == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
-		return
-	}
-	data.RefreshFromSDKType(res.Role)
+	data.RefreshFromGetResponse(res.Role)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -456,7 +430,7 @@ func (r *RoleResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		return
 	}
 
-	role := data.ToSDKType()
+	role := data.ToUpdateSDKType()
 	role1 := role
 	roleID := reflectJSONKey(role, "id").String()
 	request := operations.PutRoleRequest{
@@ -476,11 +450,7 @@ func (r *RoleResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.Role == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
-		return
-	}
-	data.RefreshFromSDKType(res.Role)
+	data.RefreshFromUpdateResponse(res.Role)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -504,7 +474,7 @@ func (r *RoleResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 		return
 	}
 
-	role := data.ToSDKType()
+	role := data.ToDeleteSDKType()
 	roleID := reflectJSONKey(role, "id").String()
 	request := operations.DeleteRoleRequest{
 		RoleID: roleID,
@@ -526,5 +496,5 @@ func (r *RoleResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 }
 
 func (r *RoleResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+	resource.ImportStatePassthroughID(ctx, path.Root("to_get_sdk_type"), req, resp)
 }

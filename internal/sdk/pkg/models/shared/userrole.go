@@ -8,27 +8,27 @@ import (
 	"time"
 )
 
-type UserRoleTypeEnum string
+type UserRoleType string
 
 const (
-	UserRoleTypeEnumUserRole UserRoleTypeEnum = "user_role"
+	UserRoleTypeUserRole UserRoleType = "user_role"
 )
 
-func (e UserRoleTypeEnum) ToPointer() *UserRoleTypeEnum {
+func (e UserRoleType) ToPointer() *UserRoleType {
 	return &e
 }
 
-func (e *UserRoleTypeEnum) UnmarshalJSON(data []byte) error {
+func (e *UserRoleType) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
 	switch v {
 	case "user_role":
-		*e = UserRoleTypeEnum(v)
+		*e = UserRoleType(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for UserRoleTypeEnum: %v", v)
+		return fmt.Errorf("invalid value for UserRoleType: %v", v)
 	}
 }
 
@@ -45,6 +45,6 @@ type UserRole struct {
 	// Id of an organization
 	OrganizationID string `json:"organization_id"`
 	// URL-friendly name for the role
-	Slug string           `json:"slug"`
-	Type UserRoleTypeEnum `json:"type"`
+	Slug string       `json:"slug"`
+	Type UserRoleType `json:"type"`
 }
